@@ -19,7 +19,7 @@ import { Server } from "socket.io";
 import path from "path";
 import { fileURLToPath } from "url";
 import { verifyJWT } from "./middlewares/auth.middleware.js";
-import { createPost } from "./controllers/posts.controller.js";
+import { createPost, createUserPost } from "./controllers/posts.controller.js";
 
 /* Configuration */
 
@@ -75,7 +75,18 @@ app.post(
   upload.fields([{ name: "picture" }, { name: "coverImage" }]),
   register
 ); // Name of the fields which we want to upload
-app.post("/posts", verifyJWT, upload.single("picture"), createPost);
+app.post(
+  "/posts",
+  verifyJWT,
+  upload.fields([{ name: "picture" }, { name: "audio" }, { name: "clip" }]),
+  createPost
+);
+app.post(
+  "/posts/profile",
+  verifyJWT,
+  upload.fields([{ name: "picture" }, { name: "audio" }, { name: "clip" }]),
+  createUserPost
+);
 
 /* Routes */
 app.use("/auth", authRoutes);
@@ -108,7 +119,10 @@ const removeUser = (socketId) => {
 };
 
 const getUsers = (userId) => {
-  return users.find((user) => user.userId === userId);
+  const findUser = users.find((user) => user.userId === userId);
+  console.log("ITS getUsers");
+  console.log(findUser);
+  return findUser;
 };
 
 io.on("connection", (socket) => {
@@ -120,26 +134,34 @@ io.on("connection", (socket) => {
     io.emit("getUsers", users);
   });
 
+  socket.on("activity", (receiverId) => {
+    const user = getUsers(receiverId);
+    console.log(user);
+
+    if (user) {
+      io.to(user.socketId).emit("userActivity");
+    }
+  });
+
   // Send message
   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
     const user = getUsers(receiverId);
 
     if (user) {
-      io.emit("getMessage", {
+      io.to(user.socketId).emit("getMessage", {
         senderId,
         text,
       });
     }
   });
 
-  socket.on("logout", (updatedUser) => {
-    socket.broadcast.emit("onLogout", updatedUser);
+  socket.on("logout", () => {
     removeUser(socket.id);
+    io.emit("getUsers", users);
   });
 
   socket.on("disconnect", () => {
     console.log("a user disconnected!");
-    // socket.broadcast.emit("onLogout", updatedUser);
     removeUser(socket.id);
     io.emit("getUsers", users);
   });

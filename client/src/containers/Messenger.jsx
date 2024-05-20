@@ -9,6 +9,7 @@ import { useAutosizeTextArea } from "../hooks/useAutosizeTextArea.js"
 import { setFriends } from "../redux/authSlice.jsx"
 import EmojiModal from "../components/EmojiModal.jsx"
 import Message from "./Message.jsx"
+import TypingMessage from "./TypingMessage.jsx"
 
 export default function Messenger({ logoutUser, windowSize }) {
   const [conversations, setConversations] = useState(null)
@@ -18,26 +19,45 @@ export default function Messenger({ logoutUser, windowSize }) {
   const [arrivalMessage, setArrivalMessage] = useState(null)
   const [currFriend, setCurrFriend] = useState([])
 
-  const [userConversations, setUserConversations] = useState([])
+  const [isTyping, setIsTyping] = useState(false)
 
   const user = useSelector((state) => state.user)
   const friends = useSelector((state) => state.user.friends)
   const token = useSelector((state) => state.token)
   const { _id, picturePath } = useSelector((state) => state.user)
 
+  const [botConversation, setBotConversation] = useState(false)
+  const [botReply, setBotReply] = useState(false)
+  const [botReplyMsg, setBotReplyMsg] = useState(false)
+
   const scrollRef = useRef()
+  const typingScrollRef = useRef()
   const dispatch = useDispatch()
   const textAreaRef = useRef()
 
+  const LANGUAGE_MODEL_API_KEY = import.meta.env.VITE_LANGUAGE_MODEL_KEY
+  const LANGUAGE_MODEL_URL = `https://generativelanguage.googleapis.com/v1beta1/models/chat-bison-001:generateMessage?key=${LANGUAGE_MODEL_API_KEY}`
+  const botId = import.meta.env.VITE_BOT_ID
+
   useAutosizeTextArea(textAreaRef.current, newMessage)
+  let activityTimer
 
   useEffect(() => {
     socket.on("getMessage", (data) => {
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,
-        createdAt: Date.now(),
+        createdAt: new Date().toISOString(),
       })
+    })
+
+    socket.on("userActivity", () => {
+      setIsTyping(true)
+
+      clearTimeout(activityTimer)
+      activityTimer = setTimeout(() => {
+        setIsTyping(false)
+      }, 2000)
     })
   }, [])
 
@@ -48,6 +68,13 @@ export default function Messenger({ logoutUser, windowSize }) {
       }
     }
 
+    if (newMessage.length > 0) {
+      const receiverId = currFriend?._id
+      socket.emit("activity", receiverId)
+    } else {
+      setIsTyping(false)
+    }
+
     document.addEventListener("keydown", handleKeyPress)
     return () => {
       document.removeEventListener("keydown", handleKeyPress)
@@ -55,61 +82,91 @@ export default function Messenger({ logoutUser, windowSize }) {
   }, [newMessage])
 
   useEffect(() => {
-    socket.on("onLogout", (data) => {
-      const changedUserId = data._id
-
-      const friendsArray = friends.filter((f) => f._id !== changedUserId)
-
-      friendsArray.push(data)
-      dispatch(setFriends(friendsArray))
-    })
-  }, [])
-
-  useEffect(() => {
-    arrivalMessage &&
-      currentChat?.filter((m) => m.members.includes(arrivalMessage.sender)) &&
+    if (
+      arrivalMessage &&
+      conversations?.members.includes(arrivalMessage.sender)
+    ) {
       setMessages((prev) => [...prev, arrivalMessage])
-  }, [arrivalMessage, currentChat])
+    }
+  }, [arrivalMessage])
 
   useEffect(() => {
-    const getConversations = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3001/conversations/${user._id}`,
-          {
-            method: "GET",
-            headers: { Authorization: `Bearer ${token}` },
+    const botMessage = async () => {
+      if (newMessage !== "") {
+        setBotReplyMsg(true)
+
+        const payload = {
+          prompt: { messages: [{ content: newMessage }] },
+          temperature: 0.1,
+          candidate_count: 1,
+        }
+        setNewMessage("")
+
+        try {
+          const response = await fetch(LANGUAGE_MODEL_URL, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+            method: "POST",
+          })
+          const data = await response.json()
+
+          const message = {
+            conversationId: conversations,
+            senderId: botId,
+            text: data.candidates[0].content,
+            createdAt: new Date(),
           }
-        )
-        const data = await response.json()
-        setUserConversations(data)
-      } catch (err) {
-        console.log(err)
+
+          if (response.ok) {
+            setMessages([...messages, message])
+            setBotReplyMsg(false)
+          }
+
+          try {
+            const response = await fetch("http://localhost:3001/messages", {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(message),
+            })
+
+            if (!response.ok) {
+              setMessages(messages)
+            }
+          } catch (err) {
+            console.log(err)
+          }
+        } catch (err) {
+          console.log(err.message)
+        }
       }
     }
-    getConversations()
-  }, [])
+    botMessage()
+    setBotReply(false)
+  }, [botReply])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const getConvoId = currentChat?.filter((m) =>
-      m.members.includes(currFriend._id)
-    )
-
     const message = {
-      conversationId: getConvoId[0]?._id,
+      conversationId: conversations,
       senderId: user._id,
       text: newMessage,
     }
 
-    const receiverId = currFriend._id
+    if (!botConversation) {
+      const receiverId = currFriend._id
 
-    socket.emit("sendMessage", {
-      senderId: user._id,
-      receiverId,
-      text: newMessage,
-    })
+      socket.emit("sendMessage", {
+        senderId: user._id,
+        receiverId,
+        text: newMessage,
+      })
+    }
 
     try {
       const response = await fetch("http://localhost:3001/messages", {
@@ -120,10 +177,15 @@ export default function Messenger({ logoutUser, windowSize }) {
         },
         body: JSON.stringify(message),
       })
-      const data = await response.data
+      const data = await response.json()
 
       if (response.ok) {
         setMessages([...messages, data])
+      }
+
+      if (botConversation) {
+        setBotReply(true)
+      } else {
         setNewMessage("")
       }
     } catch (err) {
@@ -131,27 +193,41 @@ export default function Messenger({ logoutUser, windowSize }) {
     }
   }
 
-  const getFriendConversation = async (friend) => {
+  const getFriendConversation = async (friend, isBot) => {
     try {
-      const response = await fetch(
-        `http://localhost:3001/conversations/find/${user._id}/${friend._id}`,
-        {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+      const response = isBot
+        ? await fetch(
+            `http://localhost:3001/conversations/find/${user._id}/${botId}`,
+            {
+              method: "GET",
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          )
+        : await fetch(
+            `http://localhost:3001/conversations/find/${user._id}/${friend._id}`,
+            {
+              method: "GET",
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          )
+
       const data = await response.json()
       setConversations(data)
-      setCurrFriend(friend)
-      console.log(data)
+
+      if (isBot) {
+        setBotConversation(true)
+      } else {
+        setCurrFriend(friend)
+        setBotConversation(false)
+      }
     } catch (err) {
       console.log(err)
     }
   }
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages])
+    scrollRef.current?.scrollIntoView()
+  }, [messages, isTyping, botReplyMsg])
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-white text-gray-700 dark:bg-black dark:text-gray-300">
@@ -169,14 +245,32 @@ export default function Messenger({ logoutUser, windowSize }) {
           </div>
 
           <div className="h-full w-full overflow-auto ">
+            <div
+              onClick={() => {
+                getFriendConversation(currFriend, true)
+              }}
+            >
+              <Conversation
+                conversations={conversations}
+                setCurrentChat={setCurrentChat}
+                setMessages={setMessages}
+                isBot
+              />
+            </div>
+
             {friends.map((friend, idx) => (
               <div
                 key={idx}
                 onClick={() => {
-                  getFriendConversation(friend)
+                  getFriendConversation(friend, false)
                 }}
               >
-                <Conversation conversations = {conversations} setCurrentChat = {setCurrentChat} setMessages = {setMessages} friend={friend} />
+                <Conversation
+                  conversations={conversations}
+                  setCurrentChat={setCurrentChat}
+                  setMessages={setMessages}
+                  friend={friend}
+                />
               </div>
             ))}
           </div>
@@ -186,15 +280,32 @@ export default function Messenger({ logoutUser, windowSize }) {
           {currentChat ? (
             <div className="flex h-full flex-col">
               <div className="h-[75px] border-b border-gray-500 border-opacity-40">
-                <ChatTopbar currFriend={currFriend} />
+                <ChatTopbar currFriend={currFriend} isBot={botConversation} />
               </div>
 
-              <div className="flex flex-grow flex-col overflow-auto p-2 xs:p-4">
+              <div className="flex h-0 flex-grow flex-col overflow-auto p-2 xs:p-4">
                 {messages.map((m, idx) => (
                   <div key={idx} ref={scrollRef}>
-                    {m && <Message message={m} own={m.senderId === user._id} />}
+                    <Message
+                      own={m.senderId === user._id}
+                      message={m}
+                      user={user}
+                      currFriend={currFriend}
+                      isBot={botConversation}
+                    />
                   </div>
                 ))}
+
+                {(isTyping || botReplyMsg) && (
+                  <TypingMessage
+                    isBot={botConversation}
+                    message={{
+                      text: "Typing...",
+                      createdAt: new Date().toISOString(),
+                    }}
+                    currFriend={currFriend}
+                  />
+                )}
               </div>
 
               <div className="relative m-2 flex min-h-[50px] items-center gap-2 rounded-[25px] border border-r-2 border-gray-400 px-2 sm:m-4 sm:px-4">
@@ -206,7 +317,7 @@ export default function Messenger({ logoutUser, windowSize }) {
                 />
                 <textarea
                   ref={textAreaRef}
-                  className="max-h-[125px] w-full flex-1 resize-none bg-red-400 bg-transparent px-2 py-[2px] text-[14px] leading-4 outline-none xss:text-[16px] sm:text-[18px] md:overflow-hidden"
+                  className="max-h-[125px] w-full flex-1 resize-none bg-red-400 bg-transparent px-2 py-[2px] text-[14px] leading-5 outline-none xss:text-[16px] sm:text-[18px]"
                   placeholder="Message..."
                   onChange={(e) => setNewMessage(e.target.value)}
                   value={newMessage}
@@ -214,7 +325,7 @@ export default function Messenger({ logoutUser, windowSize }) {
                 ></textarea>
                 <button
                   className="flex text-blue-400 hover:text-white"
-                  onClick={handleSubmit}
+                  onClick={(e) => handleSubmit(e)}
                 >
                   Send
                 </button>

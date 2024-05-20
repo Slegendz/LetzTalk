@@ -41,6 +41,7 @@ const getConversation =  async (req, res) => {
 const getMembersConversation = async (req, res) => {
   const { firstUserId, secondUserId } = req.params;
 
+  console.log(firstUserId, secondUserId);
   try {
     const conversation = await Conversation.findOne({
       members: { $all: [firstUserId, secondUserId] },

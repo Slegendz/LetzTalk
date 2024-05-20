@@ -5,6 +5,18 @@ export const getUser = async (req, res) => {
   try {
     const { id } = req.params; // gettting id from the url
     const user = await User.findById(id); // finding the user by id
+    
+    const userConversation = await Conversation.find({
+      members: { $all: [id, process.env.BOT_ID] },
+    });
+
+    if (userConversation.length == 0) {
+      const newConversation = new Conversation({
+        members: [id, process.env.BOT_ID],
+      });
+      await newConversation.save();
+    }
+
     res.status(200).json(user);
   } catch (err) {
     res.status(404).json({ error: err.message });
@@ -75,6 +87,8 @@ export const getUserFriends = async (req, res) => {
       }
     );
 
+    formattedFriends.sort((a, b) => -a.lastOnline.localeCompare(b.lastOnline));
+
     res.status(200).json(formattedFriends);
   } catch (err) {
     res.status(404).json({ error: err.message });
@@ -102,7 +116,7 @@ export const addRemoveFriends = async (req, res) => {
       user.friends.push(friendId);
       friend.friends.push(id);
 
-      if (!userConversation) {
+      if (userConversation.length == 0) {
         const newConversation = new Conversation({
           members: [id, friendId],
         });
@@ -144,3 +158,4 @@ export const addRemoveFriends = async (req, res) => {
     res.status(404).json({ error: err.message });
   }
 };
+

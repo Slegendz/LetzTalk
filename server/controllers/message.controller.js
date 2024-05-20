@@ -23,4 +23,22 @@ const getMessage = async (req, res) => {
   }
 };
 
-export { postMessage, getMessage };
+const postPrompt = async (req, res) => {
+ 
+  const { conversationId, senderId, text } = req.body;
+
+  const newMessage = new Message({ conversationId, senderId, text });
+  await newMessage.save();
+  // res.status(200).json(newMessage);
+
+  try {
+    
+    console.log(data);
+    res.send(data);
+  } catch (error) {
+    console.error("Error:", error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+export { postMessage, getMessage, postPrompt };

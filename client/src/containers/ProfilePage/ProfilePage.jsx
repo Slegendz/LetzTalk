@@ -42,17 +42,19 @@ const ProfilePage = ({ logoutUser }) => {
                 : CoverImg
             }
             alt="coverImg"
-            className="w-full object-cover object-center max-h-[250px] sm:max-h-[400px]"
-          />
+            className="w-full object-cover object-center max-h-[500px] aspect-video"
+            />
         </div>
+            {/* max-h-[250px] sm:max-h-[400px] */}
+        
 
         <div className="-mt-[16%] min-h-screen bg-gray-300 bg-opacity-10 block max-w-[1024px] px-4 py-8 sm:px-[4%] lg:flex lg:justify-center lg:gap-2">
           <div className="w-full lg:w-[40%]">
             <UserWidget userId={userId} picturePath={user.picturePath} />
             <FriendListWidget userId={userId} />
           </div>
-          <div className="w-full lg:w-[60%]">
-            <MyPostWidget picturePath={user.picturePath} />
+          <div className="w-full lg:w-[60%] mt-6 lg:m-0">
+            <MyPostWidget picturePath={user.picturePath} isProfile />
             <PostsWidget userId={userId} isProfile />
           </div>
         </div>

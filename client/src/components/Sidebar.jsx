@@ -1,6 +1,6 @@
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { setMode } from "../redux/authSlice.jsx"
+import { setMode, setLogout } from "../redux/authSlice.jsx"
 import Logo from "../assets/Img/Logo.png"
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md"
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5"

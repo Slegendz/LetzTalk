@@ -17,15 +17,26 @@ const postSchema = new Schema(
     },
     location: String,
     description: String,
-    picturePath: String,
+    picturePath: {
+      type: String,
+      default: "",
+    },
     userPicturePath: String,
+    audioPath: {
+      type: String,
+      default: "",
+    },
+    clipPath: {
+      type: String,
+      default: "",
+    },
     likes: {
       type: Map,
       of: Boolean,
     },
     comments: {
-        type: Array,
-        default: []
+      type: Array,
+      default: [],
     },
   },
   { timestamps: true }

@@ -39,7 +39,7 @@ const userSchema = new Schema({
     },
     lastOnline: {
         type: String,
-        default: Date.now,
+        default: new Date().toISOString(),
     },
     occupation: String,
     location: String,

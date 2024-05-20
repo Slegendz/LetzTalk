@@ -1,11 +1,15 @@
 import Post from "../models/posts.model.js";
 import User from "../models/user.model.js";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
-const createPost = async (req, res) => {
+const createUserPost = async (req, res) => {
   try {
     const { userId, description, picturePath } = req.body;
+
     const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: "User not found " });
+    }
 
     const newPost = await Post.create({
       userId,
@@ -13,6 +17,37 @@ const createPost = async (req, res) => {
       lastName: user.lastName,
       description,
       picturePath,
+      userPicturePath: user.picturePath,
+      location: user.location,
+      likes: {},
+      comments: [],
+    });
+    await newPost.save();
+
+    const posts = await Post.find({ userId }).sort({ createdAt: -1 });
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+const createPost = async (req, res) => {
+  try {
+    const { userId, description, picturePath, clipPath, audioPath } = req.body;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      res.status(404).json({ message: "User not found " });
+    }
+
+    const newPost = await Post.create({
+      userId,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      description,
+      picturePath,
+      audioPath,
+      clipPath,
       userPicturePath: user.picturePath,
       location: user.location,
       likes: {},
@@ -29,7 +64,7 @@ const createPost = async (req, res) => {
 
 const getFeedPosts = async (req, res) => {
   try {
-    const posts = await Post.find().sort({'createdAt': -1});
+    const posts = await Post.find().sort({ createdAt: -1 });
     res.status(200).json(posts); // Readed successfully
   } catch (err) {
     res.status(404).json({ message: err.message }); // Not found
@@ -55,7 +90,7 @@ const getUserPost = async (req, res) => {
 const getUserPosts = async (req, res) => {
   try {
     const { userId } = req.params;
-    const posts = await Post.find({ userId }).sort({ 'createdAt': -1});
+    const posts = await Post.find({ userId }).sort({ createdAt: -1 });
     res.status(200).json(posts); // Readed successfully
   } catch (err) {
     res.status(404).json({ message: err.message }); // Not found
@@ -122,7 +157,7 @@ const postComment = async (req, res) => {
       createdAt: new Date(),
     };
 
-    post.comments.push(newComment); 
+    post.comments.push(newComment);
     await post.save();
 
     res.status(201).json(post);
@@ -153,6 +188,7 @@ export {
   getUserPost,
   getFeedPosts,
   createPost,
+  createUserPost,
   postComment,
   getComments,
 };

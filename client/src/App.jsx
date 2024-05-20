@@ -8,7 +8,7 @@ import Missing from "./containers/Missing/Missing"
 import Homepage from "./containers/Homepage/Homepage"
 import LoginPage from "./containers/LoginPage/LoginPage"
 import Messenger from "./containers/Messenger"
-import useHandleLogOut from "./hooks/useHandleLogOut.js"
+import useUserActiveStatus from "./hooks/useUserActiveStatus.js"
 import useWindowSize from "./hooks/useWindowSize.js"
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
   // Using useMemo for optimization, we can achieve similar results with useEffect but that will be less efficient.
   // it will only cache the state when mode is changed.
   const isAuth = Boolean(useSelector((state) => state.token))
-  const { logoutUser } = useHandleLogOut();
+  const { logoutUser } = useUserActiveStatus();
   const windowSize = useWindowSize();
 
   return (
