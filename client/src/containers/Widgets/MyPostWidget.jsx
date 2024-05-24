@@ -5,6 +5,7 @@ import { setPosts } from "../../redux/authSlice"
 import { FaRegImage } from "react-icons/fa6"
 import { MdAudiotrack } from "react-icons/md"
 import { FaPaperclip } from "react-icons/fa"
+import React from "react"
 
 const MyPostWidget = ({ picturePath, isProfile = false }) => {
   const dispatch = useDispatch()

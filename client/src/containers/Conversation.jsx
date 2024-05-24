@@ -2,6 +2,7 @@ import { formatDistanceToNowStrict } from "date-fns"
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import UserImage from "../assets/Img/github.gif"
+import React from "react"
 
 export default function Conversation({
   friend,

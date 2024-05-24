@@ -1,6 +1,6 @@
 import { io } from "socket.io-client"
 
-const socket = io.connect(`${import.meta.env.VITE_BASE_URL}`);
+const socket = io.connect("https://letztalk.onrender.com");
 console.log("Socket init");
 
 if(!socket){

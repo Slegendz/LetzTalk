@@ -6,6 +6,7 @@ import FriendListWidget from "../Widgets/FriendWidget"
 import MyPostWidget from "../Widgets/MyPostWidget"
 import PostsWidget from "../Widgets/PostsWidget"
 import UserWidget from "../Widgets/UserWidget"
+import React from "react"
 
 const ProfilePage = () => {
   const loggedInUser = useSelector((state) => state.user)

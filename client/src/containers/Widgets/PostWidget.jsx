@@ -5,6 +5,7 @@ import CommentPost from "../../components/CommentPost"
 import SharePost from "../../components/SharePost"
 import LikePost from "../../components/LikePost"
 // import FormatNumber from "../../components/FormatNumber"
+import React from "react"
 
 const PostWidget = ({
   postId,

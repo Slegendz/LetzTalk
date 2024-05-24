@@ -3,6 +3,7 @@ import { setFriends } from "../redux/authSlice"
 import UserImage from "./UserImage"
 import { FaUserPlus } from "react-icons/fa6"
 import { FaUserMinus } from "react-icons/fa"
+import React from "react"
 
 const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const dispatch = useDispatch()

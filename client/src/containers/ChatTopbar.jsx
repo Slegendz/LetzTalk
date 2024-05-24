@@ -4,6 +4,7 @@ import { Link } from "react-router-dom"
 import { MdCall } from "react-icons/md"
 import { FaVideo } from "react-icons/fa6"
 import UserImage from "../assets/Img/github.gif"
+import React from "react"
 
 export default function ChatTopbar({ currFriend, isBot = false }) {
   const onlineUsers = useSelector((state) => state.onlineUsers)

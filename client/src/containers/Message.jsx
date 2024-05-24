@@ -1,5 +1,6 @@
 import UserImage from "../assets/Img/github.gif"
 import { formatDistanceToNowStrict } from "date-fns"
+import React from "react"
 
 const Message = ({ own, message, currFriend, user, isBot = false }) =>  {
   const lastOnlineTime = formatDistanceToNowStrict(message.createdAt).split(" ")

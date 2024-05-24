@@ -7,6 +7,7 @@ import { MdOutlineWork } from "react-icons/md"
 import { FaTwitter } from "react-icons/fa"
 import { FaInstagram } from "react-icons/fa"
 import { FaLinkedin } from "react-icons/fa"
+import React from "react"
 
 const UserWidget = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null)

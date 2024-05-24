@@ -7,6 +7,7 @@ import MyPostWidget from "../Widgets/MyPostWidget"
 import PostsWidget from "../Widgets/PostsWidget"
 import UserWidget from "../Widgets/UserWidget"
 import CoverImg from "../../assets/Img/coverImg.jpg"
+import React from "react"
 
 const ProfilePage = ({ logoutUser }) => {
   const loggedInUser = useSelector((state) => state.user)
