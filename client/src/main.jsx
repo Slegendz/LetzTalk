@@ -9,8 +9,8 @@ import { persistStore } from "redux-persist"
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <Provider store={store}>
-      {/* <PersistGate loading={null} persistor={persistStore(store)}> */}
+      <PersistGate loading={null} persistor={persistStore(store)}>
         <App />
-      {/* </PersistGate> */}
+      </PersistGate>
     </Provider>
 )
