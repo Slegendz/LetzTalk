@@ -1,4 +1,4 @@
-Mern-SocialMedia/frontend/.prettierignoremodule.exports = {
+module.exports = {
   root: true,
   env: { browser: true, es2020: true },
   extends: [
