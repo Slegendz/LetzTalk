@@ -67,6 +67,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage }); // anytime we need to upload the file we will call upload and it will store the file in storage
 
+app.get("/", (req, res) => {
+  res.send("Server is running.");
+});
+
 /* Routes with Files */
 
 // It will upload the single picture using upload middleware when we will visit the register route. we are not making route for this because of upload middleware.
@@ -101,7 +105,7 @@ const expressServer = app.listen(PORT, () =>
 
 const io = new Server(expressServer, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "https://letztalkchat.netlify.app",
   },
 });
 
