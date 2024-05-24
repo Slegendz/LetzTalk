@@ -125,7 +125,7 @@ export default function Messenger({ logoutUser, windowSize }) {
           }
 
           try {
-            const response = await fetch("http://localhost:3001/messages", {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/messages`, {
               method: "POST",
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -169,7 +169,7 @@ export default function Messenger({ logoutUser, windowSize }) {
     }
 
     try {
-      const response = await fetch("http://localhost:3001/messages", {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/messages`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -197,14 +197,14 @@ export default function Messenger({ logoutUser, windowSize }) {
     try {
       const response = isBot
         ? await fetch(
-            `http://localhost:3001/conversations/find/${user._id}/${botId}`,
+            `${import.meta.env.VITE_BASE_URL}/conversations/find/${user._id}/${botId}`,
             {
               method: "GET",
               headers: { Authorization: `Bearer ${token}` },
             }
           )
         : await fetch(
-            `http://localhost:3001/conversations/find/${user._id}/${friend._id}`,
+            `${import.meta.env.VITE_BASE_URL}/conversations/find/${user._id}/${friend._id}`,
             {
               method: "GET",
               headers: { Authorization: `Bearer ${token}` },

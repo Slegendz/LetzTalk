@@ -13,7 +13,7 @@ const Message = ({ own, message, currFriend, user, isBot = false }) =>  {
         <div className="h-[30px] w-[30px]">
           <img
             className="h-full w-full rounded-full object-cover object-center"
-            src = {isBot ? UserImage : `http://localhost:3001/assets/${currFriend.picturePath}`}
+            src = {isBot ? UserImage : `${import.meta.env.VITE_BASE_URL}/assets/${currFriend.picturePath}`}
             alt="UserImage"
           />
         </div>
@@ -38,7 +38,7 @@ const Message = ({ own, message, currFriend, user, isBot = false }) =>  {
         <div className="h-[30px] w-[30px]">
           <img
             className="h-full w-full rounded-full object-cover object-center"
-            src={`http://localhost:3001/assets/${user.picturePath}`}
+            src={`${import.meta.env.VITE_BASE_URL}/assets/${user.picturePath}`}
             alt="UserImage"
           />
         </div>

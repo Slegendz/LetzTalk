@@ -68,7 +68,7 @@ const SideBar = ({ _id, picturePath, logoutUser }) => {
             <img
               className="h-full w-full rounded-full object-cover object-center p-[8px]"
               alt="user"
-              src={`http://localhost:3001/assets/${picturePath}`}
+              src={`${import.meta.env.VITE_BASE_URL}/assets/${picturePath}`}
             />
           </div>
         </Link>
@@ -88,7 +88,7 @@ const SideBar = ({ _id, picturePath, logoutUser }) => {
           <img
             className="h-full w-full rounded-full object-cover object-center"
             alt="user"
-            src={`http://localhost:3001/assets/${picturePath}`}
+            src={`${import.meta.env.VITE_BASE_URL}/assets/${picturePath}`}
           />
         </Link>
         <div

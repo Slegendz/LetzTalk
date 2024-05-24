@@ -16,7 +16,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
 
   const patchFriend = async () => {
     const response = await fetch(
-      `http://localhost:3001/users/${_id}/${friendId}`,
+      `${import.meta.env.VITE_BASE_URL}/users/${_id}/${friendId}`,
       {
         method: "PATCH",
         headers: {
@@ -35,7 +35,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
         <UserImage userId = {friendId} image={userPicturePath} />
         <div>
           <a
-            href={`http://localhost:5173/profile/${friendId}`}
+            href={`${import.meta.env.VITE_BASE_URL}/profile/${friendId}`}
             className="cursor-pointer text-xl hover:text-blue-400"
           >
             {name}

@@ -15,7 +15,7 @@ const ProfilePage = ({ logoutUser }) => {
   const token = useSelector((state) => state.token)
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -38,7 +38,7 @@ const ProfilePage = ({ logoutUser }) => {
           <img
             src={
               user.coverImagePath !== ""
-                ? `http://localhost:3001/assets/${user.coverImagePath}`
+                ? `${import.meta.env.VITE_BASE_URL}/assets/${user.coverImagePath}`
                 : CoverImg
             }
             alt="coverImg"

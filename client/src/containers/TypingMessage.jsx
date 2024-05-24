@@ -16,7 +16,7 @@ const TypingMessage = ({
           src={
             isBot
               ? UserImage
-              : `http://localhost:3001/assets/${currFriend.picturePath}`
+              : `${import.meta.env.VITE_BASE_URL}assets/${currFriend.picturePath}`
           }
           alt="UserImage"
         />

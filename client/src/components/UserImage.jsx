@@ -6,7 +6,7 @@ const UserImage = ({ image }) => {
       <img
         className="h-full w-full rounded-full object-cover object-center"
         alt="user"
-        src={`http://localhost:3001/assets/${image}`}
+        src={`${import.meta.env.VITE_BASE_URL}/assets/${image}`}
       />
     </div>
   )

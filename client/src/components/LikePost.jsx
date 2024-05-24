@@ -19,7 +19,7 @@ const LikePost = ({ likes, postId }) => {
   
   // Add or Remove Like functionality
   const patchLike = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/posts/${postId}/like`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,

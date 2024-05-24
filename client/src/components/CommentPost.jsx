@@ -5,7 +5,6 @@ import { formatDistanceToNowStrict } from "date-fns"
 import { GoDotFill } from "react-icons/go"
 import { IoPaperPlane } from "react-icons/io5"
 
-
 const CommentPost = ({ comments, isComments, postId}) => {
   const dispatch = useDispatch()
   const token = useSelector((state) => state.token)
@@ -18,7 +17,7 @@ const CommentPost = ({ comments, isComments, postId}) => {
   const handleComment = async (e) => {
     e.preventDefault()
     const response = await fetch(
-      `http://localhost:3001/posts/${postId}/comment`,
+      `${import.meta.env.VITE_BASE_URL}/posts/${postId}/comment`,
       {
         method: "POST",
         headers: {
@@ -70,7 +69,7 @@ const CommentPost = ({ comments, isComments, postId}) => {
               <div key={i} className="my-2 px-4">
                 <div className="flex w-full flex-1 items-start justify-start gap-4">
                   <img
-                    src={`http://localhost:3001/assets/${user.picturePath}`}
+                    src={`${import.meta.env.VITE_BASE_URL}/assets/${user.picturePath}`}
                     alt="User-pic"
                     className="my-1 h-[40px] w-[40px] rounded-full object-cover"
                   />

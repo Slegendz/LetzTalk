@@ -15,7 +15,7 @@ const UserWidget = ({ userId, picturePath }) => {
   const userFriends = useSelector((state) => state.user.friends);
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     })

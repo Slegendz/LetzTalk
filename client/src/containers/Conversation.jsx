@@ -22,7 +22,7 @@ export default function Conversation({
     const getMessages = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3001/messages/${conversations._id}`,
+          `${import.meta.env.VITE_BASE_URL}/messages/${conversations._id}`,
           {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
@@ -53,7 +53,7 @@ export default function Conversation({
           src={
             isBot
               ? UserImage
-              : `http://localhost:3001/assets/${friend?.picturePath}`
+              : `${import.meta.env.VITE_BASE_URL}/assets/${friend?.picturePath}`
           }
           className="h-full w-full rounded-full object-cover object-center"
           alt="FriendPic"

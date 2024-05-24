@@ -43,7 +43,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
     }
 
     if (!isProfile) {
-      const response = await fetch(`http://localhost:3001/posts`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/posts`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -51,7 +51,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
       const posts = await response.json()
       dispatch(setPosts({ posts }))
     } else {
-      const response = await fetch(`http://localhost:3001/posts/profile`, {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/posts/profile`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,

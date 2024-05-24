@@ -1,38 +1,40 @@
-import { Box, useMediaQuery } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import Navbar from "../Navbar/Navbar";
-import FriendListWidget from "../Widgets/FriendWidget";
-import MyPostWidget from "../Widgets/MyPostWidget";
-import PostsWidget from "../Widgets/PostsWidget";
-import UserWidget from "../Widgets/UserWidget";
+import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
+import { useParams } from "react-router-dom"
+import Navbar from "../Navbar/Navbar"
+import FriendListWidget from "../Widgets/FriendWidget"
+import MyPostWidget from "../Widgets/MyPostWidget"
+import PostsWidget from "../Widgets/PostsWidget"
+import UserWidget from "../Widgets/UserWidget"
 
 const ProfilePage = () => {
-  const loggedInUser = useSelector((state) => state.user);
-  const [user, setUser] = useState(null);
-  const { userId } = useParams();
-  const token = useSelector((state) => state.token);
-  const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
+  const loggedInUser = useSelector((state) => state.user)
+  const [user, setUser] = useState(null)
+  const { userId } = useParams()
+  const token = useSelector((state) => state.token)
+  const isNonMobileScreens = useMediaQuery("(min-width:1000px)")
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await response.json();
-    setUser(data);
-  };
+    const response = await fetch(
+      `${import.meta.env.BASE_URL}/users/${userId}`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
+    const data = await response.json()
+    setUser(data)
+  }
 
   useEffect(() => {
-    getUser();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    getUser()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!user) return null;
+  if (!user) return null
 
   return (
-    <div className = "flex flex-col items-center bg-zinc-100 text-gray-700 dark:bg-[#121212] dark:text-gray-300">
-      <Navbar picturePath = {loggedInUser.picturePath} id = {loggedInUser._id} />
+    <div className="flex flex-col items-center bg-zinc-100 text-gray-700 dark:bg-[#121212] dark:text-gray-300">
+      <Navbar picturePath={loggedInUser.picturePath} id={loggedInUser._id} />
       <Box
         width="100%"
         padding="2rem 6%"
@@ -55,7 +57,7 @@ const ProfilePage = () => {
         </Box>
       </Box>
     </div>
-  );
-};
+  )
+}
 
-export default ProfilePage;
+export default ProfilePage

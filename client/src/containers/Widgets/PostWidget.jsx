@@ -65,7 +65,7 @@ const PostWidget = ({
           loading="lazy"
           className="h-full max-h-[400px] w-full bg-[#121212] object-contain md:max-h-[520px]"
           alt="post"
-          src={`http://localhost:3001/assets/${picturePath}`}
+          src={`${import.meta.env.VITE_BASE_URL}/assets/${picturePath}`}
         />
       )}
 
@@ -79,7 +79,7 @@ const PostWidget = ({
           // style={{ pointerEvents: "none" }}
         >
           <source
-            src={`http://localhost:3001/assets/${clipPath}`}
+            src={`${import.meta.env.VITE_BASE_URL}/assets/${clipPath}`}
             type="video/mp4"
           />
         </video>
@@ -91,7 +91,7 @@ const PostWidget = ({
           ref = {audioRef}
             loading="lazy"
             controlsList="nodownload noplaybackrate"
-            src={`http://localhost:3001/assets/${audioPath}`}
+            src={`${import.meta.env.VITE_BASE_URL}/assets/${audioPath}`}
             controls
             type="audio/mp3"
             className="w-[60%] audioNoVolumeBar"
