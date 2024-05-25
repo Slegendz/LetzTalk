@@ -12,7 +12,7 @@ import postsRoutes from "./routes/posts.js";
 import messageRoutes from "./routes/message.js";
 import conversationRoutes from "./routes/conversation.js";
 import { Server } from "socket.io";
-import { multer } from "multer"
+import multer from "multer"
 
 // Used to properly set the path when we configure directories
 import path from "path";
