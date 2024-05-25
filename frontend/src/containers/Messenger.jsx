@@ -125,14 +125,17 @@ export default function Messenger({ logoutUser, windowSize }) {
           }
 
           try {
-            const response = await fetch(`${process.env.REACT_APP_BASE_URL}/messages`, {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(message),
-            })
+            const response = await fetch(
+              `${process.env.REACT_APP_BASE_URL}/messages`,
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(message),
+              }
+            )
 
             if (!response.ok) {
               setMessages(messages)
@@ -169,14 +172,17 @@ export default function Messenger({ logoutUser, windowSize }) {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/messages`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(message),
-      })
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/messages`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(message),
+        }
+      )
       const data = await response.json()
 
       if (response.ok) {
@@ -230,7 +236,10 @@ export default function Messenger({ logoutUser, windowSize }) {
   }, [messages, isTyping, botReplyMsg])
 
   return (
-    <div className="flex h-full w-full overflow-hidden bg-white text-gray-700 dark:bg-black dark:text-gray-300">
+    <div
+      className={`flex w-full overflow-hidden bg-white text-gray-700 dark:bg-black dark:text-gray-300`}
+      style={{ height: `${windowSize.height}px` }}
+    >
       <Sidebar logoutUser={logoutUser} _id={_id} picturePath={picturePath} />
 
       <div className="mb-[60px] flex flex-1 bg-zinc-100 md:mb-0 md:ml-[70px] dark:bg-black">

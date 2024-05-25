@@ -15,7 +15,7 @@ const SideBar = ({ _id, picturePath, logoutUser }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed bottom-0 left-0 flex h-[60px] w-full items-center justify-evenly bg-white md:left-0 md:top-0 md:h-full md:w-[70px] md:flex-col md:justify-between md:border-r-[1.5px] md:border-r-gray-600 md:border-opacity-30  dark:md:border-opacity-60 md:px-2 md:py-4 dark:border-r-gray-600 dark:bg-black z-20">
+    <div className="fixed bottom-0 left-0 flex h-[60px] w-full items-center justify-evenly bg-white md:left-0 md:top-0 md:h-full md:w-[70px] md:flex-col md:justify-between md:border-r-[1.5px] md:border-r-gray-600 md:border-opacity-30  dark:md:border-opacity-60 md:px-2 md:py-4 dark:border-r-gray-600 dark:bg-black">
       <Link className="hidden md:block md:py-2" to="/home">
         <img
           src={Logo}
