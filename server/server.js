@@ -60,7 +60,9 @@ app.get("/", (req, res) => {
 
 // Storing the user images and data locally in assets folder with filename
 const storage = multer.diskStorage({
-  destination: "./",
+  destination: function (req, file, cb) {
+    cb(null, "public");
+  },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
   },

@@ -31,11 +31,10 @@ const uploadOnCloudinary = async (localFilePath) => {
     console.log("FILE IS UPLOADED ON CLOUD ", modifiedUrl);
     return modifiedUrl;
   } catch (err) {
+    fs.unlinkSync(localFilePath);
     console.log("Failed to upload");
     // Remove the locally saved temporarily saved file as the upload opeation got failed
     return "";
-  } finally {
-    fs.unlinkSync(localFilePath);
   }
 };
 
