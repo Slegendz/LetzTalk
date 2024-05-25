@@ -52,7 +52,8 @@ export default function Conversation({
           src={
             isBot
               ? UserImage
-              : `${process.env.REACT_APP_BASE_URL}/assets/${friend?.picturePath}`
+              : friend?.picturePath
+              // : `${process.env.REACT_APP_BASE_URL}/assets/${friend?.picturePath}`
           }
           className="h-full w-full rounded-full object-cover object-center"
           alt="FriendPic"

@@ -8,7 +8,8 @@ const UserImage = ({ image }) => {
       <img
         className="h-full w-full rounded-full object-cover object-center"
         alt="user"
-        src={`${process.env.REACT_APP_BASE_URL}/assets/${image}`}
+        // src={`${process.env.REACT_APP_BASE_URL}/assets/${image}`}
+        src = {image}
       />
     </div>
   )

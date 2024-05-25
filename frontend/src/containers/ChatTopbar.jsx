@@ -23,7 +23,8 @@ export default function ChatTopbar({ currFriend, isBot = false }) {
           <Link to={`/profile/${currFriend?._id}`}>
             <div className="relative h-[40px] w-[40px] cursor-pointer xs:h-[45px] xs:w-[45px]">
               <img
-                src={`${process.env.REACT_APP_BASE_URL}/assets/${currFriend?.picturePath}`}
+                // src={`${process.env.REACT_APP_BASE_URL}/assets/${currFriend?.picturePath}`}
+                src = {currFriend?.picturePath}
                 className="h-full w-full rounded-full object-cover object-center"
                 alt="FriendPic"
               />

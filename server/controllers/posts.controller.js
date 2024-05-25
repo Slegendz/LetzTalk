@@ -1,22 +1,29 @@
 import Post from "../models/posts.model.js";
 import User from "../models/user.model.js";
-import { v4 as uuidv4 } from "uuid";
+import uploadOnCloudinary from "../utils/fileUpload.js";
 
 const createUserPost = async (req, res) => {
   try {
-    const { userId, description, picturePath } = req.body;
+    const { userId, description } = req.body;
+    const { picture, clip, audio } = req.files;
 
     const user = await User.findById(userId);
     if (!user) {
       res.status(404).json({ message: "User not found " });
     }
 
+    const picturePath = picture ? await uploadOnCloudinary(picture[0].path) : "";
+    const audioPath = audio ? await uploadOnCloudinary(audio[0].path) : "";
+    const clipPath = clip ? await uploadOnCloudinary(clip[0].path) : "";
+    
     const newPost = await Post.create({
       userId,
       firstName: user.firstName,
       lastName: user.lastName,
       description,
       picturePath,
+      audioPath,
+      clipPath,
       userPicturePath: user.picturePath,
       location: user.location,
       likes: {},
@@ -33,12 +40,17 @@ const createUserPost = async (req, res) => {
 
 const createPost = async (req, res) => {
   try {
-    const { userId, description, picturePath, clipPath, audioPath } = req.body;
+    const { userId, description } = req.body;
     const user = await User.findById(userId);
+    const { picture, clip, audio } = req.files;
 
     if (!user) {
       res.status(404).json({ message: "User not found " });
     }
+
+    const picturePath = picture ? await uploadOnCloudinary(picture[0].path) : "";
+    const audioPath = audio ? await uploadOnCloudinary(audio[0].path) : "";
+    const clipPath = clip ? await uploadOnCloudinary(clip[0].path) : "";
 
     const newPost = await Post.create({
       userId,

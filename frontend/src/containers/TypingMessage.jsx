@@ -16,7 +16,8 @@ const TypingMessage = ({
           src={
             isBot
               ? UserImage
-              : `${process.env.REACT_APP_BASE_URL}/assets/${currFriend.picturePath}`
+              : currFriend.picturePath
+              // : `${process.env.REACT_APP_BASE_URL}/assets/${currFriend.picturePath}`
           }
           alt="UserImage"
         />

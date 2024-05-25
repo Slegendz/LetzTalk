@@ -69,7 +69,8 @@ const SideBar = ({ _id, picturePath, logoutUser }) => {
             <img
               className="h-full w-full rounded-full object-cover object-center p-[8px]"
               alt="user"
-              src={`${process.env.REACT_APP_BASE_URL}/assets/${picturePath}`}
+              // src={`${process.env.REACT_APP_BASE_URL}/assets/${picturePath}`}
+              src = {picturePath}
             />
           </div>
         </Link>
@@ -89,7 +90,8 @@ const SideBar = ({ _id, picturePath, logoutUser }) => {
           <img
             className="h-full w-full rounded-full object-cover object-center"
             alt="user"
-            src={`${process.env.REACT_APP_BASE_URL}/assets/${picturePath}`}
+            // src={`${process.env.REACT_APP_BASE_URL}/assets/${picturePath}`}
+            src = {picturePath}
           />
         </Link>
         <div

@@ -2,7 +2,6 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import multer from "multer";
 import helmet from "helmet";
 import morgan from "morgan";
 import connectDb from "./db/dbConn.js";
@@ -12,8 +11,8 @@ import usersRoutes from "./routes/users.js";
 import postsRoutes from "./routes/posts.js";
 import messageRoutes from "./routes/message.js";
 import conversationRoutes from "./routes/conversation.js";
-
 import { Server } from "socket.io";
+import { upload } from "./middlewares/multer.middleware.js"
 
 // Used to properly set the path when we configure directories
 import path from "path";
@@ -53,20 +52,6 @@ app.use(cors());
 // Storing assets locally
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
-/* File storage */
-
-// Storing the user images and data locally in assets folder with filename
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/assets");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-
-const upload = multer({ storage }); // anytime we need to upload the file we will call upload and it will store the file in storage
-
 app.get("/", (req, res) => {
   res.send("Server is running.");
 });
@@ -78,7 +63,7 @@ app.post(
   "/auth/register",
   upload.fields([{ name: "picture" }, { name: "coverImage" }]),
   register
-); // Name of the fields which we want to upload
+);         // Name of the fields which we want to upload
 app.post(
   "/posts",
   verifyJWT,

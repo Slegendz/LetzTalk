@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
-import Conversation from "../models/conversation.model.js";
+import uploadOnCloudinary from "../utils/fileUpload.js";
 
 /* Register User */
 
@@ -12,13 +12,19 @@ export const register = async (req, res) => {
     lastName,
     email,
     password,
-    picturePath,
     friends,
     occupation,
     location,
-    coverImagePath,
     lastOnline,
   } = req.body;
+
+  const { picture, coverImage } = req.files;
+
+  console.log(picture);
+  console.log(picture[0].path)
+
+  const picturePath = await uploadOnCloudinary(picture[0].path);
+  const coverImagePath = coverImage ? await uploadOnCloudinary(coverImage[0].path) : "";
 
   try {
     const salt = await bcrypt.genSalt();
@@ -38,15 +44,15 @@ export const register = async (req, res) => {
       viewedProfile: Math.floor(Math.random() * 1000),
       impressions: Math.floor(Math.random() * 1000),
     });
+    console.log(newUser)
 
     // Save newuser and respond
     const result = await newUser.save();
 
-
     // sending 201 means something is created so we are sending result.
     res.status(201).json(result);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Not pissib"});
   }
 };
 

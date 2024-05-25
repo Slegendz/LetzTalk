@@ -54,10 +54,10 @@ const Form = () => {
     for (let value in values) {
       formData.append(value, values[value])
     }
-    formData.append("picturePath", values.picture.name)
+    // formData.append("picturePath", values.picture.name)
 
-    if(values.coverImage) formData.append("coverImagePath", values.coverImage.name)
-    else formData.append("coverImagePath", "");
+    // if(values.coverImage) formData.append("coverImagePath", values.coverImage.name)
+    // else formData.append("coverImagePath", "");
 
     const savedUserResponse = await fetch(
       `${process.env.REACT_APP_BASE_URL}/auth/register`,

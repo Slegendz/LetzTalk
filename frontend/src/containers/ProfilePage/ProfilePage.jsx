@@ -39,7 +39,8 @@ const ProfilePage = ({ logoutUser }) => {
           <img
             src={
               user.coverImagePath !== ""
-                ? `${process.env.REACT_APP_BASE_URL}/assets/${user.coverImagePath}`
+                // ? `${process.env.REACT_APP_BASE_URL}/assets/${user.coverImagePath}`
+                ? user.coverImagePath
                 : CoverImg
             }
             alt="coverImg"

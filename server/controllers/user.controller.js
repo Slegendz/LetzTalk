@@ -28,7 +28,6 @@ export const updateUser = async (req, res) => {
     const { id } = req.params;
     const { lastOnlineUser } = req.body;
 
-    console.log(lastOnlineUser);
     const user = await User.findById(id);
 
     if (!user) {

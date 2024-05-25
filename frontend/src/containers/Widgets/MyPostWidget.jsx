@@ -30,17 +30,17 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
 
     if (image) {
       formData.append("picture", image)
-      formData.append("picturePath", image.name)
+      // formData.append("picturePath", image.name)
     }
 
     if (clip) {
       formData.append("clip", clip)
-      formData.append("clipPath", clip.name)
+      // formData.append("clipPath", clip.name)
     }
 
     if (audio) {
       formData.append("audio", audio)
-      formData.append("audioPath", audio.name)
+      // formData.append("audioPath", audio.name)
     }
 
     if (!isProfile) {
