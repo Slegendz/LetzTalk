@@ -230,7 +230,7 @@ export default function Messenger({ logoutUser, windowSize }) {
   }, [messages, isTyping, botReplyMsg])
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-white text-gray-700 dark:bg-black dark:text-gray-300">
+    <div className="flex h-full w-full overflow-hidden bg-white text-gray-700 dark:bg-black dark:text-gray-300">
       <Sidebar logoutUser={logoutUser} _id={_id} picturePath={picturePath} />
 
       <div className="mb-[60px] flex flex-1 bg-zinc-100 md:mb-0 md:ml-[70px] dark:bg-black">
@@ -244,7 +244,7 @@ export default function Messenger({ logoutUser, windowSize }) {
             />
           </div>
 
-          <div className="h-full w-full overflow-auto ">
+          <div className="h-full w-full overflow-auto">
             <div
               onClick={() => {
                 getFriendConversation(currFriend, true)
