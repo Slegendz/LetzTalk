@@ -12,7 +12,7 @@ import postsRoutes from "./routes/posts.js";
 import messageRoutes from "./routes/message.js";
 import conversationRoutes from "./routes/conversation.js";
 import { Server } from "socket.io";
-import { upload } from "./middlewares/multer.middleware.js"
+import { multer } from "multer"
 
 // Used to properly set the path when we configure directories
 import path from "path";
@@ -55,6 +55,20 @@ app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 app.get("/", (req, res) => {
   res.send("Server is running.");
 });
+
+/* File storage */
+
+// Storing the user images and data locally in assets folder with filename
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/assets");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage }); // anytime we need to upload the file we will call upload and it will store the file in storage
 
 /* Routes with Files */
 
