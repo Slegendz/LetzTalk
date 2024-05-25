@@ -105,7 +105,8 @@ const expressServer = app.listen(PORT, () =>
 
 const io = new Server(expressServer, {
   cors: {
-    origin: "https://letztalkchat.netlify.app",
+    // origin: "https://letztalkchat.netlify.app",
+    origin: "*",
   },
 });
 
