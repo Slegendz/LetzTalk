@@ -20,9 +20,6 @@ export const register = async (req, res) => {
 
   const { picture, coverImage } = req.files;
 
-  console.log(picture);
-  console.log(picture[0].path)
-
   const picturePath = await uploadOnCloudinary(picture[0].path);
   const coverImagePath = coverImage ? await uploadOnCloudinary(coverImage[0].path) : "";
 
@@ -44,7 +41,6 @@ export const register = async (req, res) => {
       viewedProfile: Math.floor(Math.random() * 1000),
       impressions: Math.floor(Math.random() * 1000),
     });
-    console.log(newUser)
 
     // Save newuser and respond
     const result = await newUser.save();
