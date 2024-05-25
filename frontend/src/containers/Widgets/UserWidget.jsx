@@ -16,7 +16,7 @@ const UserWidget = ({ userId, picturePath }) => {
   const userFriends = useSelector((state) => state.user.friends);
 
   const getUser = async () => {
-    const response = await fetch(`${process.env.REACT_BASE_URL}/users/${userId}`, {
+    const response = await fetch(`${process.env.REACT_APP_BASE_URL}/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     })

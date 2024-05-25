@@ -14,7 +14,7 @@ const Message = ({ own, message, currFriend, user, isBot = false }) =>  {
         <div className="h-[30px] w-[30px]">
           <img
             className="h-full w-full rounded-full object-cover object-center"
-            src = {isBot ? UserImage : `${process.env.REACT_BASE_URL}/assets/${currFriend.picturePath}`}
+            src = {isBot ? UserImage : `${process.env.REACT_APP_BASE_URL}/assets/${currFriend.picturePath}`}
             alt="UserImage"
           />
         </div>
@@ -39,7 +39,7 @@ const Message = ({ own, message, currFriend, user, isBot = false }) =>  {
         <div className="h-[30px] w-[30px]">
           <img
             className="h-full w-full rounded-full object-cover object-center"
-            src={`${process.env.REACT_BASE_URL}/assets/${user.picturePath}`}
+            src={`${process.env.REACT_APP_BASE_URL}/assets/${user.picturePath}`}
             alt="UserImage"
           />
         </div>

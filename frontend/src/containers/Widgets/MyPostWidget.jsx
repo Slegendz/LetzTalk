@@ -44,7 +44,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
     }
 
     if (!isProfile) {
-      const response = await fetch(`${process.env.REACT_BASE_URL}/posts`, {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/posts`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
@@ -52,11 +52,14 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
       const posts = await response.json()
       dispatch(setPosts({ posts }))
     } else {
-      const response = await fetch(`${process.env.REACT_BASE_URL}/posts/profile`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
-      })
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/posts/profile`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        }
+      )
       const posts = await response.json()
       dispatch(setPosts({ posts }))
     }
@@ -66,7 +69,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
 
     setClip(null)
     setIsClip(false)
-    
+
     setAudio(null)
     setIsAudio(false)
 

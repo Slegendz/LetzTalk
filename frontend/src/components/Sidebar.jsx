@@ -6,13 +6,13 @@ import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md"
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5"
 import { FaHome } from "react-icons/fa"
 import { IoNotifications } from "react-icons/io5"
-import { Link, Navigate } from "react-router-dom"
+import { Link, useNavigate  } from "react-router-dom"
 import { IoMdLogOut } from "react-icons/io"
 
 const SideBar = ({ _id, picturePath, logoutUser }) => {
   const mode = useSelector((state) => state.mode)
   const dispatch = useDispatch()
-  const navigate = Navigate();
+  const navigate = useNavigate();
 
   return (
     <div className="fixed bottom-0 left-0 flex h-[60px] w-full items-center justify-evenly bg-white md:left-0 md:top-0 md:h-full md:w-[70px] md:flex-col md:justify-between md:border-r-[1.5px] md:border-r-gray-600 md:border-opacity-30  dark:md:border-opacity-60 md:px-2 md:py-4 dark:border-r-gray-600 dark:bg-black">

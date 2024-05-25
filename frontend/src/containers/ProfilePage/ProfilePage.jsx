@@ -16,7 +16,7 @@ const ProfilePage = ({ logoutUser }) => {
   const token = useSelector((state) => state.token)
 
   const getUser = async () => {
-    const response = await fetch(`${process.env.REACT_BASE_URL}/users/${userId}`, {
+    const response = await fetch(`${process.env.REACT_APP_BASE_URL}/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -39,7 +39,7 @@ const ProfilePage = ({ logoutUser }) => {
           <img
             src={
               user.coverImagePath !== ""
-                ? `${process.env.REACT_BASE_URL}/assets/${user.coverImagePath}`
+                ? `${process.env.REACT_APP_BASE_URL}/assets/${user.coverImagePath}`
                 : CoverImg
             }
             alt="coverImg"

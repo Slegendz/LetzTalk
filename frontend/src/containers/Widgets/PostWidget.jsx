@@ -66,7 +66,7 @@ const PostWidget = ({
           loading="lazy"
           className="h-full max-h-[400px] w-full bg-[#121212] object-contain md:max-h-[520px]"
           alt="post"
-          src={`${process.env.REACT_BASE_URL}/assets/${picturePath}`}
+          src={`${process.env.REACT_APP_BASE_URL}/assets/${picturePath}`}
         />
       )}
 
@@ -80,7 +80,7 @@ const PostWidget = ({
           // style={{ pointerEvents: "none" }}
         >
           <source
-            src={`${process.env.REACT_BASE_URL}/assets/${clipPath}`}
+            src={`${process.env.REACT_APP_BASE_URL}/assets/${clipPath}`}
             type="video/mp4"
           />
         </video>
@@ -92,7 +92,7 @@ const PostWidget = ({
           ref = {audioRef}
             loading="lazy"
             controlsList="nodownload noplaybackrate"
-            src={`${process.env.REACT_BASE_URL}/assets/${audioPath}`}
+            src={`${process.env.REACT_APP_BASE_URL}/assets/${audioPath}`}
             controls
             type="audio/mp3"
             className="w-[60%] audioNoVolumeBar"

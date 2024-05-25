@@ -23,7 +23,7 @@ export default function Conversation({
     const getMessages = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_BASE_URL}/messages/${conversations._id}`,
+          `${process.env.REACT_APP_BASE_URL}/messages/${conversations._id}`,
           {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
@@ -54,7 +54,7 @@ export default function Conversation({
           src={
             isBot
               ? UserImage
-              : `${process.env.REACT_BASE_URL}/assets/${friend?.picturePath}`
+              : `${process.env.REACT_APP_BASE_URL}/assets/${friend?.picturePath}`
           }
           className="h-full w-full rounded-full object-cover object-center"
           alt="FriendPic"

@@ -35,9 +35,9 @@ export default function Messenger({ logoutUser, windowSize }) {
   const dispatch = useDispatch()
   const textAreaRef = useRef()
 
-  const LANGUAGE_MODEL_API_KEY = process.env.REACT_LANGUAGE_MODEL_KEY
+  const LANGUAGE_MODEL_API_KEY = process.env.REACT_APP_LANGUAGE_MODEL_KEY
   const LANGUAGE_MODEL_URL = `https://generativelanguage.googleapis.com/v1beta1/models/chat-bison-001:generateMessage?key=${LANGUAGE_MODEL_API_KEY}`
-  const botId = process.env.REACT_BOT_ID
+  const botId = process.env.REACT_APP_BOT_ID
 
   useAutosizeTextArea(textAreaRef.current, newMessage)
   let activityTimer
@@ -125,7 +125,7 @@ export default function Messenger({ logoutUser, windowSize }) {
           }
 
           try {
-            const response = await fetch(`${process.env.REACT_BASE_URL}/messages`, {
+            const response = await fetch(`${process.env.REACT_APP_BASE_URL}/messages`, {
               method: "POST",
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -169,7 +169,7 @@ export default function Messenger({ logoutUser, windowSize }) {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_BASE_URL}/messages`, {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/messages`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -197,14 +197,14 @@ export default function Messenger({ logoutUser, windowSize }) {
     try {
       const response = isBot
         ? await fetch(
-            `${process.env.REACT_BASE_URL}/conversations/find/${user._id}/${botId}`,
+            `${process.env.REACT_APP_BASE_URL}/conversations/find/${user._id}/${botId}`,
             {
               method: "GET",
               headers: { Authorization: `Bearer ${token}` },
             }
           )
         : await fetch(
-            `${process.env.REACT_BASE_URL}/conversations/find/${user._id}/${friend._id}`,
+            `${process.env.REACT_APP_BASE_URL}/conversations/find/${user._id}/${friend._id}`,
             {
               method: "GET",
               headers: { Authorization: `Bearer ${token}` },
