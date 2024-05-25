@@ -34,8 +34,6 @@ export default function Conversation({
         if (response.ok) {
           setMessages(data)
           setCurrentChat(conversations)
-          console.log("Setting conversation of the bot inside Conversation")
-          console.log(conversations)
         }
       } catch (err) {
         console.log(err)
