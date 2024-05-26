@@ -32,7 +32,7 @@ const PostWidget = ({
           subtitle={location}
           userPicturePath={userPicturePath}
         />
-        <p className="mt-4 px-1 text-sm">{description}</p>
+        <p className="mt-4 px-1 text-sm wrapWord">{description}</p>
       </div>
 
       {/* {picturePath ? (
@@ -77,6 +77,7 @@ const PostWidget = ({
           className="h-full max-h-[400px] w-full bg-[#121212] object-contain md:max-h-[520px] "
           muted
           controls
+          preload = "meta"
           disablePictureInPicture
           // style={{ pointerEvents: "none" }}
         >

@@ -21,20 +21,21 @@ const uploadOnCloudinary = async (localFilePath) => {
 
     let modifiedUrl = response.secure_url;
     if (response.resource_type === "image") {
-      modifiedUrl = response.secure_url.replace(`v${response.version}`, "f_auto,q_auto");
+      modifiedUrl = response.secure_url.replace(`v${response.version}`, "f_auto,q_30");
     }
     if (response.resource_type === "video") {
-      modifiedUrl = response.secure_url.replace(`v${response.version}`, "f_auto:video,q_auto");
+      modifiedUrl = response.secure_url.replace(`v${response.version}`, "f_auto:video,q_30");
     }
 
     // File has been uploaded successfully
     console.log("FILE IS UPLOADED ON CLOUD ", modifiedUrl);
     return modifiedUrl;
   } catch (err) {
-    fs.unlinkSync(localFilePath);
     console.log("Failed to upload");
     // Remove the locally saved temporarily saved file as the upload opeation got failed
     return "";
+  } finally {
+    fs.unlinkSync(localFilePath);
   }
 };
 

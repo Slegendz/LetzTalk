@@ -90,6 +90,8 @@ const SideBar = ({ _id, picturePath, logoutUser }) => {
           <img
             className="h-full w-full rounded-full object-cover object-center"
             alt="user"
+            loading = "lazy"
+            decoding = "async"
             // src={`${process.env.REACT_APP_BASE_URL}/assets/${picturePath}`}
             src = {picturePath}
           />

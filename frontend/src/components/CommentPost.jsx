@@ -69,7 +69,7 @@ const CommentPost = ({ comments, isComments, postId}) => {
               <div key={i} className="my-2 px-4">
                 <div className="flex w-full flex-1 items-start justify-start gap-4">
                   <img
-                    src={`${process.env.REACT_APP_BASE_URL}/assets/${user.picturePath}`}
+                    src={user.picturePath}
                     alt="User-pic"
                     className="my-1 h-[40px] w-[40px] rounded-full object-cover"
                   />
@@ -82,7 +82,7 @@ const CommentPost = ({ comments, isComments, postId}) => {
                       <GoDotFill className="p-1 text-sm text-gray-500" />
                       <p className="text-[10px] text-gray-500"> {time} </p>
                     </div>
-                    <p className="break-all text-sm"> {content} </p>
+                    <p className="text-sm wrapWord"> {content} </p>
                   </div>
                 </div>
               </div>

@@ -43,6 +43,8 @@ const ProfilePage = ({ logoutUser }) => {
                 ? user.coverImagePath
                 : CoverImg
             }
+            loading = "lazy"
+            decoding = "async"
             alt="coverImg"
             className="w-full object-cover object-center max-h-[500px] aspect-video"
             />

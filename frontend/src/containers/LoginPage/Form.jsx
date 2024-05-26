@@ -42,6 +42,8 @@ const initialValuesLogin = {
 
 const Form = () => {
   const [pageType, setPageType] = useState("register")
+  const [disable, setDisable] = useState(false)
+
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const isLogin = pageType === "login"
@@ -69,17 +71,21 @@ const Form = () => {
     const savedUser = await savedUserResponse.json()
     onSubmitProps.resetForm()
 
+    setDisable(false)
     if (savedUser) {
       setPageType("login")
     }
   }
 
   const login = async (values, onSubmitProps) => {
-    const loggedInResponse = await fetch(`${process.env.REACT_APP_BASE_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    })
+    const loggedInResponse = await fetch(
+      `${process.env.REACT_APP_BASE_URL}/auth/login`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      }
+    )
     const loggedIn = await loggedInResponse.json()
 
     onSubmitProps.resetForm()
@@ -101,9 +107,11 @@ const Form = () => {
         hideProgressBar: false,
       })
     }
+    setDisable(false)
   }
 
   const handleFormSubmit = async (values, onSubmitProps) => {
+    setDisable(true)
     if (isLogin) await login(values, onSubmitProps)
     if (isRegister) await register(values, onSubmitProps)
   }
@@ -304,9 +312,16 @@ const Form = () => {
             <div className="w-full">
               <button
                 type="submit"
-                className="my-8 block w-full rounded-lg bg-cyan-500 py-4 text-white hover:bg-cyan-400"
+                disabled={disable}
+                className="my-8 flex w-full items-center justify-center rounded-lg bg-cyan-500 py-4 text-white hover:bg-cyan-400"
               >
-                {isLogin ? "LOGIN" : "REGISTER"}
+                {disable ? (
+                  <span className="loaderSpin animate-spinnerSpin"></span>
+                ) : isLogin ? (
+                  "LOGIN"
+                ) : (
+                  "REGISTER"
+                )}
               </button>
               <p
                 onClick={() => {

@@ -12,6 +12,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
   const [isImage, setIsImage] = useState(false)
   const [isClip, setIsClip] = useState(false)
   const [isAudio, setIsAudio] = useState(false)
+  const [disable, setDisable] = useState(false)
 
   const [image, setImage] = useState(null)
   const [clip, setClip] = useState(null)
@@ -28,6 +29,8 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
     formData.append("userId", _id)
     formData.append("description", post)
 
+    setDisable(true)
+    
     if (image) {
       formData.append("picture", image)
       // formData.append("picturePath", image.name)
@@ -37,7 +40,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
       formData.append("clip", clip)
       // formData.append("clipPath", clip.name)
     }
-
+    
     if (audio) {
       formData.append("audio", audio)
       // formData.append("audioPath", audio.name)
@@ -63,16 +66,16 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
       const posts = await response.json()
       dispatch(setPosts({ posts }))
     }
-
+    
     setImage(null)
     setIsImage(false)
-
+    
     setClip(null)
     setIsClip(false)
-
+    
     setAudio(null)
     setIsAudio(false)
-
+    setDisable(false)
     setPost("")
   }
 
@@ -123,7 +126,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
                 setImage(e.target.files[0])
               }}
             />
-            <span className="flex w-full md:items-center md:justify-center">
+            <span className="flex w-full md:items-center md:justify-center wrapWord">
               {!image
                 ? "Upload a file ( PNG, JPG, GIF )"
                 : image.name.length > 40
@@ -150,7 +153,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
                 setAudio(e.target.files[0])
               }}
             />
-            <span className="flex w-full md:items-center md:justify-center">
+            <span className="flex w-full md:items-center md:justify-center wrapWord">
               {!audio
                 ? "Upload a file ( Mp3, Audio File)"
                 : audio.name.length > 40
@@ -177,7 +180,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
                 setClip(e.target.files[0])
               }}
             />
-            <span className="flex w-full md:items-center md:justify-center">
+            <span className="flex w-full md:items-center md:justify-center wrapWord">
               {!clip
                 ? "Upload a file ( MP4, mkv )"
                 : clip.name.length > 40
@@ -228,11 +231,15 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
         </div>
 
         <button
-          disabled={!post}
+          disabled={!post || disable}
           onClick={handlePost}
-          className="rounded-[30px] bg-blue-400 p-2 px-6 text-white hover:bg-blue-300"
+          className="flex w-[100px] items-center justify-center rounded-[30px] bg-blue-400 p-2 px-6 text-white hover:bg-blue-300"
         >
-          Post
+          {disable ? (
+            <span className="loaderSpin animate-spinnerSpin"></span>
+          ) : (
+            "Post"
+          )}
         </button>
       </div>
     </div>

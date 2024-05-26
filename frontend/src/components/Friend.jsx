@@ -4,6 +4,7 @@ import UserImage from "./UserImage"
 import { FaUserPlus } from "react-icons/fa6"
 import { FaUserMinus } from "react-icons/fa"
 import React from "react"
+import { Link } from "react-router-dom"
 
 const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const dispatch = useDispatch()
@@ -33,14 +34,19 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   return (
     <div className="flex items-center justify-between text-gray-700 dark:text-gray-300">
       <div className="flex gap-4">
-        <UserImage userId = {friendId} image={userPicturePath} />
+        <UserImage userId={friendId} image={userPicturePath} />
         <div>
-          <a
-            href={`${process.env.REACT_APP_BASE_URL}/profile/${friendId}`}
+          {/* <a href={`${process.env.REACT_APP_BASE_URL}/users/${friendId}`}>
+            {name}
+          </a> */}
+
+          <Link
+            to={`/profile/${friendId}`}
             className="cursor-pointer text-xl hover:text-blue-400"
           >
-            {name}
-          </a>
+            {" "}
+            {name}{" "}
+          </Link>
           <p className="text-sm"> {subtitle} </p>
         </div>
       </div>

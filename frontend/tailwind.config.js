@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,jsx}"],
-  darkMode: ['selector', '[data-theme="dark"]'],
+  darkMode: ["selector", '[data-theme="dark"]'],
   theme: {
     fontFamily: {
       Rubik: "Rubik",
@@ -40,25 +40,35 @@ export default {
       },
       backgroundImage: {},
       animation: {
-        'catBoom': 'boom 4s ease-in-out forwards 3s',
+        catBoom: "boom 4s ease-in-out forwards 3s",
+        spinnerSpin: "rotation 1s linear infinite",
       },
       keyframes: {
         boom: {
-          '0%': { transform: 'translate(0%)' },
-          '30%': {transform: 'translate(-500%)' },
-          '50%': { transform: 'translate(-800%)' },
-          '100%': {transform: 'translate(-10000%)'},
-        }
+          "0%": { transform: "translate(0%)" },
+          "30%": { transform: "translate(-500%)" },
+          "50%": { transform: "translate(-800%)" },
+          "100%": { transform: "translate(-10000%)" },
+        },
+        rotation: {
+          "0%": {
+            transform: "rotate(0deg)",
+          },
+          "100%": {
+            transform: "rotate(360deg)",
+            borderTopColor: "gold",
+          },
+        },
       },
       screens: {
-        'xss': '340px',
-        'xs': '480px',
-        'sm': '640px',
-        'md': '768px',
-        'lg': '1024px',
-        'xl': '1280px',
-        '2xl': '1536px',
-      }
+        xss: "340px",
+        xs: "480px",
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1536px",
+      },
     },
   },
   plugins: [],
