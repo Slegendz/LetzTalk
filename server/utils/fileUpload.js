@@ -17,6 +17,7 @@ const uploadOnCloudinary = async (localFilePath) => {
     // Upload the file on cloud
     const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
+      folder: "letztalk",
     });
 
     let modifiedUrl = response.secure_url;

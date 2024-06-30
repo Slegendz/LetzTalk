@@ -23,37 +23,6 @@ export const getUser = async (req, res) => {
   }
 };
 
-export const updateUser = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { lastOnlineUser } = req.body;
-
-    const user = await User.findById(id);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    user.lastOnline = lastOnlineUser;
-    await user.save();
-
-    const formattedData = {
-      _id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      picturePath: user.picturePath,
-      lastOnline: lastOnlineUser,
-      location: user.location,
-      occupation: user.occupation,
-    };
-
-    console.log(formattedData);
-    res.status(200).json(formattedData);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
 export const getUserFriends = async (req, res) => {
   try {
     const { id } = req.params;

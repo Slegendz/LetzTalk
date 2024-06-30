@@ -12,7 +12,8 @@ import postsRoutes from "./routes/posts.js";
 import messageRoutes from "./routes/message.js";
 import conversationRoutes from "./routes/conversation.js";
 import { Server } from "socket.io";
-import multer from "multer"
+import multer from "multer";
+import cookieParser from "cookie-parser";
 
 // Used to properly set the path when we configure directories
 import path from "path";
@@ -34,6 +35,7 @@ connectDb();
 
 app.use(express.json()); // It parses incoming requests with JSON payloads (POST)
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // Using helmet to secure our backend http requests (contains 15 sub express middlewares)
 app.use(helmet());
@@ -47,7 +49,12 @@ app.use(morgan("common"));
 // Limit is set to 30mb as we will send photos and videos request to the server
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 // Storing assets locally
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
@@ -75,7 +82,7 @@ app.post(
   "/auth/register",
   upload.fields([{ name: "picture" }, { name: "coverImage" }]),
   register
-);         // Name of the fields which we want to upload
+); // Name of the fields which we want to upload
 app.post(
   "/posts",
   verifyJWT,

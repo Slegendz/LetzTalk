@@ -45,6 +45,7 @@ const userSchema = new Schema({
     location: String,
     impressions: Number,
     viewedProfile: Number,
+    refreshToken: String,
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

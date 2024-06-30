@@ -10,18 +10,20 @@ const useUserActiveStatus = () => {
   const dispatch = useDispatch()
 
   const logoutUser = async () => {
-    const timeStamp = new Date().toISOString()
     const response = await fetch(
-      `${process.env.REACT_APP_BASE_URL}/users/updateUser/${user._id}`,
+      `${process.env.REACT_APP_BASE_URL}/auth/logout/${user._id}`,
       {
-        method: "PATCH",
+        method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json", // Specify content type
         },
-        body: JSON.stringify({ lastOnlineUser: timeStamp }), // Stringify the body data
+        credentials: 'include'
       }
     )
+
+    const data = await response.json()
+    console.log(response)
+    console.log(data)
 
     if (response.ok) {
       socket.emit("logout")

@@ -94,12 +94,12 @@ const Form = () => {
       dispatch(
         setLogin({
           user: loggedIn.user,
-          token: loggedIn.token,
+          token: loggedIn.accessToken,
         })
       )
       navigate("/home")
     } else {
-      toast.error("Email or password is Incorrect", {
+      toast.error(`${loggedIn.message}`, {
         position: "top-right",
         autoClose: 3000,
         newestOnTop: true,

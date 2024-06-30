@@ -9,7 +9,7 @@ const FriendListWidget = ({ userId }) => {
   const token = useSelector((state) => state.token)
   const user = useSelector((state) => state.user)
   const friends = useSelector((state) => state.user.friends)
-  
+
   useEffect(() => {
     const getFriends = async () => {
       const response = await fetch(
@@ -20,25 +20,28 @@ const FriendListWidget = ({ userId }) => {
         }
       )
       const data = await response.json()
-      dispatch(setFriends(data))
+      if (response.ok) {
+        dispatch(setFriends(data))
+      }
     }
     getFriends()
   }, [])
 
   return (
-    <div className = "my-4 m-2">
-      <p className = "text-lg my-2">Friend List</p>
-      <div className = "flex flex-col gap-4">
+    <div className="m-2 my-4">
+      <p className="my-2 text-lg">Friend List</p>
+      <div className="flex flex-col gap-4">
         {friends.map((friend, idx) => {
-          return(
-          <Friend
-            key={idx}
-            friendId={friend._id}
-            name={`${friend.firstName} ${friend.lastName}`}
-            subtitle={friend.occupation}
-            userPicturePath={friend.picturePath}
-          />
-        )})}
+          return (
+            <Friend
+              key={idx}
+              friendId={friend._id}
+              name={`${friend.firstName} ${friend.lastName}`}
+              subtitle={friend.occupation}
+              userPicturePath={friend.picturePath}
+            />
+          )
+        })}
       </div>
     </div>
   )

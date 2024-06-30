@@ -6,7 +6,8 @@ export const verifyJWT = async (req, res, next) => {
         if(!authHeader?.startsWith('Bearer ')) return res.status(403).send("Access Denied");
 
         const token = authHeader.split(' ')[1];
-        const verified = jwt.verify(token, process.env.JWT_SECRET);
+
+        const verified = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         req.user = verified;
 
         next();    // going to next middleware
