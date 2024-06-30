@@ -92,13 +92,16 @@ const login = async (req, res) => {
     delete user.password;
     await user.save();
 
+    console.log("Cookie created");
+
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
       secure : false,
-      // sameSite: "Lax",
-      // sameSite: "None",
+      sameSite: "None",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+    
+    console.log("Successful");
 
     res.status(200).json({ accessToken, user });
   } catch (err) {
