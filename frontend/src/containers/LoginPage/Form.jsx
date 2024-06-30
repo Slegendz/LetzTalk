@@ -68,6 +68,7 @@ const Form = () => {
         body: formData,
       }
     )
+    
     const savedUser = await savedUserResponse.json()
     onSubmitProps.resetForm()
 
