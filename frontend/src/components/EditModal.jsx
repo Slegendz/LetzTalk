@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react"
+import React, { useState } from "react"
 import { IoMdArrowRoundBack } from "react-icons/io"
 import "animate.css"
 import { LiaUserEditSolid } from "react-icons/lia"
@@ -18,8 +18,8 @@ const EditModal = ({ setShowModal, user, setUser }) => {
     _id,
     picturePath,
     instagramUrl,
-    twitterUrl, 
-    linkedinUrl
+    twitterUrl,
+    linkedinUrl,
   } = user
 
   const token = useSelector((state) => state.token)
@@ -45,36 +45,6 @@ const EditModal = ({ setShowModal, user, setUser }) => {
     instagram: instagramUrl,
     linkedin: linkedinUrl,
   }
-
-  const InputField = ({
-    name,
-    value,
-    onChange,
-    onBlur,
-    errors,
-    type,
-    touched,
-  }) => (
-    <div className="relative mb-4 w-full">
-      <span className="mb-2 pl-2 text-sm">
-        {name[0].toUpperCase() + name.slice(1).toLowerCase()}
-      </span>
-
-      <input
-        name={name}
-        value={value}
-        type={type}
-        onChange={onChange}
-        onBlur={onBlur}
-        className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors[name] && touched[name] ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900"}`}
-      />
-      {touched[name] && errors[name] && (
-        <div className="absolute left-4 text-sm font-light text-red-500">
-          {errors[name]}
-        </div>
-      )}
-    </div>
-  )
 
   const updateUserImage = (e) => {
     if (user) {
@@ -153,7 +123,7 @@ const EditModal = ({ setShowModal, user, setUser }) => {
       })
       setTimeout(() => {
         setShowModal(false)
-      }, 1000);
+      }, 1000)
     } else {
       toast.error(`${data.message}`, {
         position: "top-right",
@@ -193,7 +163,6 @@ const EditModal = ({ setShowModal, user, setUser }) => {
             touched,
             handleChange,
             handleSubmit,
-            setFieldValue,
             resetForm,
             handleBlur,
           }) => (
@@ -227,76 +196,141 @@ const EditModal = ({ setShowModal, user, setUser }) => {
               </div>
 
               <div className="md:flex md:gap-6">
-                <InputField
-                  name="firstName"
-                  value={values.firstName}
-                  onChange={handleChange}
-                  placeholder="First Name"
-                  onBlur={handleBlur}
-                  errors={errors}
-                  touched={touched}
-                />
+                <div className="relative mb-6 w-full">
+                  <span className="mb-2 pl-2 text-sm">Firstname</span>
 
-                <InputField
-                  name="lastName"
-                  value={values.lastName}
-                  onChange={handleChange}
-                  placeholder="Last Name"
-                  onBlur={handleBlur}
-                  errors={errors}
-                  touched={touched}
-                />
+                  <input
+                    name="firstName"
+                    aria-label="First Name"
+                    aria-required="true"
+                    value={values.firstName}
+                    onChange={handleChange}
+                    placeholder="First Name"
+                    onBlur={handleBlur}
+                    className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.firstName && touched.firstName ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
+                  />
+                  {touched.firstName && errors.firstName && (
+                    <div className="absolute left-4 text-sm font-light text-red-500">
+                      {errors.firstName}
+                    </div>
+                  )}
+                </div>
+
+                <div className="relative mb-6 w-full">
+                  <span className="mb-2 pl-2 text-sm">LastName</span>
+                  <input
+                    name="lastName"
+                    aria-label="Last Name"
+                    aria-required="true"
+                    value={values.lastName}
+                    onChange={handleChange}
+                    placeholder="Last Name"
+                    onBlur={handleBlur}
+                    className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.lastName && touched.lastName ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
+                  />
+                  {touched.lastName && errors.lastName && (
+                    <div className="absolute left-4 text-sm font-light text-red-500">
+                      {errors.lastName}
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <InputField
-                name="location"
-                value={values.location}
-                onChange={handleChange}
-                placeholder="Location"
-                onBlur={handleBlur}
-                errors={errors}
-                touched={touched}
-              />
+              <div className="relative mb-6 w-full">
+                <span className="mb-2 pl-2 text-sm"> Location </span>
+                <input
+                  name="location"
+                  aria-label="Location"
+                  aria-required="true"
+                  value={values.location}
+                  onChange={handleChange}
+                  placeholder="Location"
+                  onBlur={handleBlur}
+                  className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.location && touched.location ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
+                />
+                {touched.location && errors.location && (
+                  <div className="absolute left-4 text-sm font-light text-red-500">
+                    {" "}
+                    {errors.location}{" "}
+                  </div>
+                )}
+              </div>
 
-              <InputField
-                name="occupation"
-                value={values.occupation}
-                onChange={handleChange}
-                placeholder="Occupation"
-                onBlur={handleBlur}
-                errors={errors}
-                touched={touched}
-              />
+              <div className="relative mb-6 w-full">
+                <span className="mb-2 pl-2 text-sm"> Occupation</span>
+                <input
+                  name="occupation"
+                  aria-label="Occupation"
+                  aria-required="true"
+                  value={values.occupation}
+                  onChange={handleChange}
+                  placeholder="Occupation"
+                  onBlur={handleBlur}
+                  className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.occupation && touched.occupation ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
+                />
+                {touched.occupation && errors.occupation && (
+                  <div className="absolute left-4 text-sm font-light text-red-500">
+                    {errors.occupation}
+                  </div>
+                )}
+              </div>
 
-              <InputField
-                name="linkedin"
-                value={values.linkedin}
-                onChange={handleChange}
-                placeholder="Linkedin Url"
-                onBlur={handleBlur}
-                errors={errors}
-                touched={touched}
-              />
+              <div className="relative mb-6 w-full">
+                <span className="mb-2 pl-2 text-sm"> Linkedin</span>
+                <input
+                  name="linkedin"
+                  aria-label="Linkedin"
+                  aria-required="true"
+                  value={values.linkedin}
+                  onChange={handleChange}
+                  placeholder="Linkedin Url"
+                  onBlur={handleBlur}
+                  className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.linkedin && touched.linkedin ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
+                />
+                {touched.linkedin && errors.linkedin && (
+                  <div className="absolute left-4 text-sm font-light text-red-500">
+                    {errors.linkedin}
+                  </div>
+                )}
+              </div>
 
-              <InputField
-                name="instagram"
-                value={values.instagram}
-                onChange={handleChange}
-                placeholder="Instagram Url"
-                onBlur={handleBlur}
-                errors={errors}
-                touched={touched}
-              />
+              <div className="relative mb-6 w-full">
+                <span className="mb-2 pl-2 text-sm"> Instagram</span>
+                <input
+                  name="instagram"
+                  aria-label="Instagram"
+                  aria-required="true"
+                  value={values.instagram}
+                  onChange={handleChange}
+                  placeholder="Instagram Url"
+                  onBlur={handleBlur}
+                  className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.instagram && touched.instagram ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
+                />
+                {touched.instagram && errors.instagram && (
+                  <div className="absolute left-4 text-sm font-light text-red-500">
+                    {errors.instagram}
+                  </div>
+                )}
+              </div>
 
-              <InputField
-                name="twitter"
-                value={values.twitter}
-                onChange={handleChange}
-                placeholder="Twitter Url"
-                onBlur={handleBlur}
-                errors={errors}
-                touched={touched}
-              />
+              <div className="relative mb-6 w-full">
+                <span className="mb-2 pl-2 text-sm"> Twitter</span>
+                <input
+                  name="twitter"
+                  aria-label="Twitter"
+                  aria-required="true"
+                  value={values.twitter}
+                  onChange={handleChange}
+                  placeholder="Twitter Url"
+                  onBlur={handleBlur}
+                  className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.twitter && touched.twitter ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
+                />
+                {touched.twitter && errors.twitter && (
+                  <div className="absolute left-4 text-sm font-light text-red-500">
+                    {errors.twitter}
+                  </div>
+                )}
+              </div>
 
               <div className="my-6 md:flex md:gap-6">
                 <button
