@@ -13,6 +13,9 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    setUserPic: (state, action) => {
+      state.user.picturePath = action.payload; 
+    },
     setMode: (state, action) => {
       state.mode = action.payload
       if (state.mode === "light") setLight()
@@ -56,7 +59,8 @@ export const {
   setLogout,
   setPosts,
   setPost,
-  setOnlineUsers
+  setOnlineUsers,
+  setUserPic
 } = authSlice.actions
 
 export default authSlice.reducer

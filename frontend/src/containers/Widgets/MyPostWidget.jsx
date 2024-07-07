@@ -203,7 +203,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
           }}
         >
           <FaRegImage />
-          <p className="cursor-pointer hover:text-blue-400"> Image </p>
+          <p className={`${isImage ? "text-indigo-400" : "" } font-bold cursor-pointer hover:text-blue-400`}> Image </p>
         </div>
 
         <div
@@ -215,7 +215,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
           }}
         >
           <FaPaperclip />
-          <p className="cursor-pointer hover:text-blue-400">Clip</p>
+          <p className= {`${isClip ? "text-indigo-400" : "" } font-bold hover:text-blue-400 cursor-pointer `}>Clip</p>
         </div>
 
         <div
@@ -227,7 +227,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
           }}
         >
           <MdAudiotrack />
-          <p className="cursor-pointer hover:text-blue-400">Audio</p>
+          <p className={`${isAudio ? "text-indigo-400" : "" } font-bold cursor-pointer hover:text-blue-400`}>Audio</p>
         </div>
 
         <button

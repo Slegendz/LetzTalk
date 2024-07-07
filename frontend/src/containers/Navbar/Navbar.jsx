@@ -8,7 +8,6 @@ import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md"
 import { FiMessageSquare } from "react-icons/fi"
 import { FaHome } from "react-icons/fa"
 import { IoIosNotifications } from "react-icons/io"
-import { IoSearch } from "react-icons/io5"
 import NavbarModal from "../../components/NavbarModal.jsx"
 
 const Navbar = ({ id, picturePath, logoutUser }) => {
@@ -18,10 +17,10 @@ const Navbar = ({ id, picturePath, logoutUser }) => {
 
   return (
     <>
-      <div className="flex w-full items-center justify-center bg-blue-400 dark:bg-cyan-500">
+      <div className="flex w-full items-center justify-center bg-blue-400  dark:bg-[#58c4dc]">
         {/* Navbar (Logo & SearchBar) */}
 
-        <div className="flex w-full max-w-[1920px] items-center gap-4 px-[4%] py-2 md:gap-6 lg:gap-8">
+        <div className="flex w-full max-w-[1920px] items-center gap-4 px-[4%] py-3 md:gap-6 lg:gap-8">
           <div className="flex w-1/2 items-center md:gap-6 lg:gap-8">
             <img
               onClick={() => navigate("/home")}
@@ -29,13 +28,12 @@ const Navbar = ({ id, picturePath, logoutUser }) => {
               alt="Logo"
               className="w-[40%] min-w-[90px] max-w-[120px] cursor-pointer hover:animate-pulse"
             />
-            <label className="relative hidden md:block md:w-[60%]">
+            <label className="relative hidden md:block md:w-[56%]">
               <input
                 type="search"
                 placeholder="Search"
-                className="w-full rounded-xl px-4 py-[10px] text-black outline-none"
+                className="w-full rounded-3xl px-4 py-[12px] text-black outline-none"
               />
-              <IoSearch className="absolute right-0  top-[50%] h-full w-12 translate-y-[-50%] cursor-pointer rounded-r-xl bg-gray-300 p-2 text-2xl font-light text-blue-300" />
             </label>
           </div>
 

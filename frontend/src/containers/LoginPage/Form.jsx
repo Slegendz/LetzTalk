@@ -68,7 +68,7 @@ const Form = () => {
         body: formData,
       }
     )
-    
+
     const savedUser = await savedUserResponse.json()
     onSubmitProps.resetForm()
 
@@ -117,6 +117,37 @@ const Form = () => {
     if (isRegister) await register(values, onSubmitProps)
   }
 
+  const InputField = ({
+    name,
+    ariaLabel,
+    value,
+    onChange,
+    placeholder,
+    onBlur,
+    errors,
+    type,
+    touched,
+  }) => (
+    <div className="relative mb-6 w-full">
+      <input
+        name={name}
+        aria-label={ariaLabel}
+        aria-required="true"
+        value={value}
+        type = {type}
+        onChange={onChange}
+        placeholder={placeholder}
+        onBlur={onBlur}
+        className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors[name] && touched[name] ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900"}`}
+      />
+      {touched[name] && errors[name] && (
+        <div className="absolute left-4 text-sm font-light text-red-500">
+          {errors[name]}
+        </div>
+      )}
+    </div>
+  )
+
   return (
     <>
       <Formik
@@ -135,89 +166,55 @@ const Form = () => {
           handleBlur,
         }) => (
           <form onSubmit={handleSubmit}>
-            <div>
-              {isRegister && (
-                <>
-                  <div className="md:flex md:gap-6">
-                    <div className="relative mb-6 w-full">
-                      <input
-                        name="firstName"
-                        aria-label="First Name"
-                        aria-required="true"
-                        value={values.firstName}
-                        onChange={handleChange}
-                        placeholder="First Name"
-                        onBlur={handleBlur}
-                        className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.firstName && touched.firstName ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
-                      />
-                      {touched.firstName && errors.firstName && (
-                        <div className="absolute left-4 text-sm font-light text-red-500">
-                          {" "}
-                          {errors.firstName}{" "}
-                        </div>
-                      )}
-                    </div>
+            {isRegister && (
+              <>
+                <div className="md:flex md:gap-6">
+                  <InputField
+                    name="firstName"
+                    aria-label="First Name"
+                    value={values.firstName}
+                    onChange={handleChange}
+                    placeholder="First Name"
+                    onBlur={handleBlur}
+                    errors={errors}
+                    touched={touched}
+                  />
 
-                    <div className="relative mb-6 w-full">
-                      <input
-                        name="lastName"
-                        aria-label="Last Name"
-                        aria-required="true"
-                        value={values.lastName}
-                        onChange={handleChange}
-                        placeholder="Last Name"
-                        onBlur={handleBlur}
-                        className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.lastName && touched.lastName ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
-                      />
-                      {touched.lastName && errors.lastName && (
-                        <div className="absolute left-4 text-sm font-light text-red-500">
-                          {" "}
-                          {errors.lastName}{" "}
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  <InputField
+                    name="lastName"
+                    aria-label="Last Name"
+                    value={values.lastName}
+                    onChange={handleChange}
+                    placeholder="Last Name"
+                    onBlur={handleBlur}
+                    errors={errors}
+                    touched={touched}
+                  />
+                </div>
 
-                  <div className="relative mb-6 w-full">
-                    <input
-                      name="location"
-                      aria-label="Location"
-                      aria-required="true"
-                      value={values.location}
-                      onChange={handleChange}
-                      placeholder="Location"
-                      onBlur={handleBlur}
-                      className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.location && touched.location ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
-                    />
-                    {touched.location && errors.location && (
-                      <div className="absolute left-4 text-sm font-light text-red-500">
-                        {" "}
-                        {errors.location}{" "}
-                      </div>
-                    )}
-                  </div>
+                <InputField
+                  name="location"
+                  aria-label="Location"
+                  value={values.location}
+                  onChange={handleChange}
+                  placeholder="Location"
+                  onBlur={handleBlur}
+                  errors={errors}
+                  touched={touched}
+                />
 
-                  <div className="relative mb-6 w-full">
-                    <input
-                      name="occupation"
-                      aria-label="Occupation"
-                      aria-required="true"
-                      value={values.occupation}
-                      onChange={handleChange}
-                      placeholder="Occupation"
-                      onBlur={handleBlur}
-                      className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.occupation && touched.occupation ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
-                    />
-                    {touched.occupation && errors.occupation && (
-                      <div className="absolute left-4 text-sm font-light text-red-500">
-                        {" "}
-                        {errors.occupation}{" "}
-                      </div>
-                    )}
-                  </div>
-                </>
-              )}
-            </div>
+                <InputField
+                  name="occupation"
+                  aria-label="Occupation"
+                  value={values.occupation}
+                  onChange={handleChange}
+                  placeholder="Occupation"
+                  onBlur={handleBlur}
+                  errors={errors}
+                  touched={touched}
+                />
+              </>
+            )}
 
             <div className="md:flex md:gap-3">
               {isRegister && (
@@ -245,50 +242,35 @@ const Form = () => {
                 </label>
               )}
 
-              <div className="relative mb-6 w-full">
-                <input
-                  name="email"
-                  aria-label="Email"
-                  aria-required="true"
-                  value={values.email}
-                  type="email"
-                  onChange={handleChange}
-                  placeholder="Email"
-                  onBlur={handleBlur}
-                  className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.email && touched.email ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
-                />
-                {touched.email && errors.email && (
-                  <div className="absolute left-4 text-sm font-light text-red-500">
-                    {errors.email}
-                  </div>
-                )}
-              </div>
+              <InputField
+                name="email"
+                aria-label="Email"
+                value={values.email}
+                onChange={handleChange}
+                placeholder="Email"
+                onBlur={handleBlur}
+                errors={errors}
+                touched={touched}
+              />
 
-              <div className="relative mb-6 w-full">
-                <input
-                  name="password"
-                  aria-label="Password"
-                  aria-required="true"
-                  value={values.password}
-                  type="password"
-                  onChange={handleChange}
-                  placeholder="Password"
-                  onBlur={handleBlur}
-                  className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.password && touched.password ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
-                />
-                {touched.password && errors.password && (
-                  <div className="absolute left-4 text-sm font-light text-red-500">
-                    {errors.password}
-                  </div>
-                )}
-              </div>
+              <InputField
+                name="password"
+                aria-label="Password"
+                value={values.password}
+                onChange={handleChange}
+                placeholder="Password"
+                type = "password"
+                onBlur={handleBlur}
+                errors={errors}
+                touched={touched}
+              />
             </div>
 
             {isRegister && (
               <label
                 htmlFor="file-upload2"
                 className="mb-6 mt-2 flex w-full min-w-[200px] cursor-pointer rounded-lg bg-grey-800 p-4 px-4 text-base font-semibold text-white outline-none focus-within:outline-none hover:text-slate-200 dark:bg-white dark:text-indigo-600 hover:dark:text-indigo-500"
-              >
+              > 
                 <input
                   id="file-upload2"
                   className="sr-only"

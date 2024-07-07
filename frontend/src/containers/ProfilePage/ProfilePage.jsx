@@ -8,20 +8,72 @@ import PostsWidget from "../Widgets/PostsWidget"
 import UserWidget from "../Widgets/UserWidget"
 import CoverImg from "../../assets/Img/coverImg.jpg"
 import React from "react"
+import { TbPhotoEdit } from "react-icons/tb"
+import { toast, ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 const ProfilePage = ({ logoutUser }) => {
   const loggedInUser = useSelector((state) => state.user)
   const [user, setUser] = useState(null)
+  const [blurEffect, setBlurEffect] = useState(false)
+
   const { userId } = useParams()
   const token = useSelector((state) => state.token)
 
   const getUser = async () => {
-    const response = await fetch(`${process.env.REACT_APP_BASE_URL}/users/${userId}`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    const response = await fetch(
+      `${process.env.REACT_APP_BASE_URL}/users/${userId}`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
     const data = await response.json()
     setUser(data)
+  }
+
+  const updateUser = async (formData) => {
+    const response = await fetch(
+      `${process.env.REACT_APP_BASE_URL}/users/updateUser`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      }
+    )
+    const updatedUser = await response.json()
+
+    if (response.ok) {
+      setUser(updatedUser)
+      toast.success("Cover Image Updated", {
+        position: "top-right",
+        autoClose: 3000,
+        newestOnTop: true,
+        theme: "light",
+        hideProgressBar: false,
+      })
+    } else {
+      toast.error(`${updatedUser.message}`, {
+        position: "top-right",
+        autoClose: 3000,
+        newestOnTop: true,
+        theme: "light",
+        hideProgressBar: false,
+      })
+    }
+    setBlurEffect(false)
+  }
+
+  const updateCoverImage = (e) => {
+    if (user) {
+      setBlurEffect(true)
+      const formData = new FormData()
+      formData.append("id", user._id)
+      formData.append("coverImage", e.target.files[0])
+      updateUser(formData)
+    }
   }
 
   useEffect(() => {
@@ -32,37 +84,65 @@ const ProfilePage = ({ logoutUser }) => {
 
   return (
     <div className="flex flex-col items-center bg-zinc-100 text-gray-700 dark:bg-[#121212] dark:text-gray-300">
-      <Navbar logoutUser = {logoutUser} picturePath={loggedInUser.picturePath} id={loggedInUser._id} />
+      <Navbar
+        logoutUser={logoutUser}
+        picturePath={loggedInUser.picturePath}
+        id={loggedInUser._id}
+      />
 
       <div className="min-h-screen w-full max-w-[1024px]">
-        <div className="flex justify-center">
+        <div className="relative flex justify-center">
           <img
             src={
               user.coverImagePath !== ""
-                // ? `${process.env.REACT_APP_BASE_URL}/assets/${user.coverImagePath}`
-                ? user.coverImagePath
+                ? // ? `${process.env.REACT_APP_BASE_URL}/assets/${user.coverImagePath}`
+                  user.coverImagePath
                 : CoverImg
             }
-            loading = "lazy"
-            decoding = "async"
+            loading="lazy"
+            decoding="async"
             alt="coverImg"
-            className="w-full object-cover object-center max-h-[500px] aspect-video"
-            />
-        </div>
-            {/* max-h-[250px] sm:max-h-[400px] */}
-        
+            className={`${blurEffect ? "animate-blurImage" : "" }  aspect-video max-h-[500px] w-full object-cover object-center`}
+          />
 
-        <div className="-mt-[16%] min-h-screen bg-gray-300 bg-opacity-10 block max-w-[1024px] px-4 py-8 sm:px-[4%] lg:flex lg:justify-center lg:gap-2">
+          {loggedInUser._id === user._id && (
+            <label
+              htmlFor="file-upload1"
+              className="absolute right-[20px] top-[20px] h-[30px] w-[30px] cursor-pointer rounded-full bg-gray-300  md:h-[50px] md:w-[50px] bg-opacity-30"
+            >
+              <input
+                id="file-upload1"
+                className="sr-only"
+                name="file-upload1"
+                type="file"
+                accept=".png, .jpg, .jpeg, .gif"
+                onChange={(e) => {
+                  updateCoverImage(e)
+                }}
+              />
+              <TbPhotoEdit className="h-full w-full p-[6px] text-gray-800 md:p-2" />
+            </label>
+          )}
+        </div>
+
+        <div className="-mt-[16%] block min-h-screen max-w-[1024px] bg-gray-300 bg-opacity-10 px-4 py-8 sm:px-[4%] lg:flex lg:justify-center lg:gap-2">
           <div className="w-full lg:w-[40%]">
             <UserWidget userId={userId} picturePath={user.picturePath} />
             <FriendListWidget userId={userId} />
           </div>
-          <div className="w-full lg:w-[60%] mt-6 lg:m-0">
+          <div className="mt-6 w-full lg:m-0 lg:w-[60%]">
             <MyPostWidget picturePath={user.picturePath} isProfile />
             <PostsWidget userId={userId} isProfile />
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        theme="light"
+      />
     </div>
   )
 }

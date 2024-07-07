@@ -46,6 +46,18 @@ const userSchema = new Schema({
     impressions: Number,
     viewedProfile: Number,
     refreshToken: String,
+    twitterUrl: {
+        type: String, 
+        default: "",
+    },
+    instagramUrl: {
+        type: String, 
+        default: "",
+    },
+    linkedinUrl: {
+        type: String, 
+        default: "",
+    },
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

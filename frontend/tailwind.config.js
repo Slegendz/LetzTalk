@@ -7,6 +7,7 @@ export default {
       Rubik: "Rubik",
       sansSerif: "sans-serif",
       Boomster: "Boomster",
+      Nunito: "Nunito",
     },
     extend: {
       colors: {
@@ -42,6 +43,7 @@ export default {
       animation: {
         catBoom: "boom 4s ease-in-out forwards 3s",
         spinnerSpin: "rotation 1s linear infinite",
+        blurImage: "blurAnim 5s ease-in-out infinite",
       },
       keyframes: {
         boom: {
@@ -49,6 +51,13 @@ export default {
           "30%": { transform: "translate(-500%)" },
           "50%": { transform: "translate(-800%)" },
           "100%": { transform: "translate(-10000%)" },
+        },
+        blurAnim: {
+          "0%": { filter: "blur(5px)" },
+          "25%": { filter: "blur(15px)" },
+          "50%": { filter: "blur(25px)" },
+          "75%": { filter: "blur(15px)" },
+          "100%": { filter: "blur(5px)" },
         },
         rotation: {
           "0%": {

@@ -6,7 +6,7 @@ import uploadOnCloudinary from "../utils/fileUpload.js";
 /* Register User */
 
 // Async as we are making a call to mongodb so it will take time and we are passing response and request from server.
-export const register = async (req, res) => {
+const register = async (req, res) => {
   const {
     firstName,
     lastName,
@@ -51,7 +51,7 @@ export const register = async (req, res) => {
     // sending 201 means something is created so we are sending result.
     res.status(201).json(result);
   } catch (err) {
-    res.status(500).json({ error: "Not pissib" });
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -172,4 +172,4 @@ const logout = async (req, res) => {
     }
 };
 
-export { login, refresh, logout };
+export { register, login, refresh, logout };

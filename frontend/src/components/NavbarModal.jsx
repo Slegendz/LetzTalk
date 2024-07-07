@@ -35,7 +35,7 @@ const NavbarModal = ({ id, picturePath, logoutUser }) => {
       {/* Show Modal */}
 
       {showModal && (
-        <div className="absolute right-0 top-[60px] z-50 min-w-[200px] rounded-lg bg-white p-1 text-lg font-light text-grey-500 shadow-xl md:min-w-[260px] dark:bg-slate-600  dark:text-white">
+        <div className="absolute right-0 top-[60px] z-50 min-w-[200px] rounded-xl bg-white p-1 text-lg font-light text-grey-500 shadow-xl md:min-w-[260px] dark:bg-slate-600 dark:text-white">
           <ul>
             <li className="transiton-all rounded-lg p-3 px-4 duration-500 hover:bg-gray-200 dark:hover:bg-gray-500">
               <Link

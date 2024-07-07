@@ -1,11 +1,12 @@
 import User from "../models/user.model.js";
 import Conversation from "../models/conversation.model.js";
+import uploadOnCloudinary from "../utils/fileUpload.js";
 
-export const getUser = async (req, res) => {
+const getUser = async (req, res) => {
   try {
     const { id } = req.params; // gettting id from the url
     const user = await User.findById(id); // finding the user by id
-    
+
     const userConversation = await Conversation.find({
       members: { $all: [id, process.env.BOT_ID] },
     });
@@ -23,7 +24,53 @@ export const getUser = async (req, res) => {
   }
 };
 
-export const getUserFriends = async (req, res) => {
+const updateUser = async (req, res) => {
+  try {
+    const {
+      firstName,
+      lastName,
+      occupation,
+      location,
+      id,
+      linkedin,
+      instagram,
+      twitter,
+    } = req.body;
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { picture, coverImage } = req.files;
+
+    const picturePath = picture
+      ? await uploadOnCloudinary(picture[0].path)
+      : "";
+    const coverImagePath = coverImage
+      ? await uploadOnCloudinary(coverImage[0].path)
+      : "";
+
+    if (firstName) user.firstName = firstName;
+    if (lastName) user.lastName = lastName;
+    if (occupation) user.occupation = occupation;
+    if (location) user.location = location;
+    if (instagram) user.instagramUrl = instagram;
+    if (twitter) user.twitterUrl = twitter;
+    if (linkedin) user.linkedinUrl = linkedin;
+
+    if (picturePath) user.picturePath = picturePath;
+    if (coverImagePath) user.coverImagePath = coverImagePath;
+
+    await user.save();
+
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const getUserFriends = async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findById(id);
@@ -63,7 +110,7 @@ export const getUserFriends = async (req, res) => {
   }
 };
 
-export const addRemoveFriends = async (req, res) => {
+const addRemoveFriends = async (req, res) => {
   try {
     const { id, friendId } = req.params;
     const user = await User.findById(id);
@@ -127,3 +174,4 @@ export const addRemoveFriends = async (req, res) => {
   }
 };
 
+export { getUser, getUserFriends, addRemoveFriends, updateUser };

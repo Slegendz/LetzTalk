@@ -20,6 +20,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { verifyJWT } from "./middlewares/auth.middleware.js";
 import { createPost, createUserPost } from "./controllers/posts.controller.js";
+import { updateUser } from "./controllers/user.controller.js";
 
 /* Configuration */
 
@@ -96,6 +97,13 @@ app.post(
   createUserPost
 );
 
+app.patch(
+  "/users/updateUser",
+  verifyJWT,
+  upload.fields([{ name: "picture" }, { name: "coverImage" }]),
+  updateUser
+);
+
 /* Routes */
 app.use("/auth", authRoutes);
 app.use("/users", usersRoutes);
@@ -129,8 +137,6 @@ const removeUser = (socketId) => {
 
 const getUsers = (userId) => {
   const findUser = users.find((user) => user.userId === userId);
-  console.log("ITS getUsers");
-  console.log(findUser);
   return findUser;
 };
 
