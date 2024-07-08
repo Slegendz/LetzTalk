@@ -102,13 +102,13 @@ const ProfilePage = ({ logoutUser }) => {
             loading="lazy"
             decoding="async"
             alt="coverImg"
-            className={`${blurEffect ? "animate-blurImage" : "" }  aspect-video max-h-[500px] w-full object-cover object-center`}
+            className={`${blurEffect ? "animate-blurImage" : ""}  aspect-video max-h-[500px] w-full object-cover object-center`}
           />
 
           {loggedInUser._id === user._id && (
             <label
               htmlFor="file-upload1"
-              className="absolute right-[20px] top-[20px] h-[30px] w-[30px] cursor-pointer rounded-full bg-gray-300  md:h-[50px] md:w-[50px] bg-opacity-30"
+              className="absolute right-[20px] top-[20px] h-[30px] w-[30px] cursor-pointer rounded-full bg-gray-300  bg-opacity-30 md:h-[50px] md:w-[50px]"
             >
               <input
                 id="file-upload1"
@@ -131,7 +131,9 @@ const ProfilePage = ({ logoutUser }) => {
             <FriendListWidget userId={userId} />
           </div>
           <div className="mt-6 w-full lg:m-0 lg:w-[60%]">
-            <MyPostWidget picturePath={user.picturePath} isProfile />
+            {loggedInUser._id === user._id && (
+              <MyPostWidget picturePath={user.picturePath} isProfile />
+            )}
             <PostsWidget userId={userId} isProfile />
           </div>
         </div>

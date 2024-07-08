@@ -20,7 +20,7 @@ const Navbar = ({ id, picturePath, logoutUser }) => {
       <div className="flex w-full items-center justify-center bg-blue-400  dark:bg-[#58c4dc]">
         {/* Navbar (Logo & SearchBar) */}
 
-        <div className="flex w-full max-w-[1920px] items-center gap-4 px-[4%] py-3 md:gap-6 lg:gap-8">
+        <div className="flex w-full max-w-[1920px] items-center gap-4 px-[4%] py-2 md:py-3 md:gap-6 lg:gap-8">
           <div className="flex w-1/2 items-center md:gap-6 lg:gap-8">
             <img
               onClick={() => navigate("/home")}

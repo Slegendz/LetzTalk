@@ -61,7 +61,7 @@ const UserWidget = ({ userId, picturePath }) => {
           <div>
             <h4
               onClick={() => navigate(`/profile/${userId}`)}
-              className="cursor-pointer text-3xl hover:text-blue-500"
+              className="cursor-pointer text-3xl hover:text-blue-500 wrapWord"
             >
               {firstName} {lastName}
             </h4>
@@ -115,7 +115,7 @@ const UserWidget = ({ userId, picturePath }) => {
             <FaLinkedin className="text-2xl" />
             <a
               href={linkedinUrl}
-              className="text-sm hover:text-blue-400 hover:underline"
+              className="text-sm hover:text-blue-400 hover:underline wrapWord"
             >
               {linkedinUrl === "" ? "Linkedin" : linkedinUrl}
             </a>
@@ -124,7 +124,7 @@ const UserWidget = ({ userId, picturePath }) => {
             <FaInstagram className="text-2xl" />
             <a
               href={instagramUrl}
-              className="text-sm hover:text-blue-400 hover:underline"
+              className="text-sm hover:text-blue-400 hover:underline wrapWord"
             >
               {instagramUrl === "" ? "Instagram" : instagramUrl}
             </a>
@@ -133,7 +133,7 @@ const UserWidget = ({ userId, picturePath }) => {
             <FaTwitter className="text-2xl" />
             <a
               href={twitterUrl}
-              className="text-sm hover:text-blue-400 hover:underline"
+              className="text-sm hover:text-blue-400 hover:underline wrapWord"
             >
               {twitterUrl === "" ? "Twitter" : twitterUrl}
             </a>

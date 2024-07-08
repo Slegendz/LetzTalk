@@ -119,7 +119,7 @@ const PostWidget = ({
               <FaRegComment />
             </button>
             {/* <FormatNumber count = {1001} /> */}
-            <p className="text-sm"> {comments.length}</p>
+            <p className="text-sm"> {comments?.length}</p>
           </div>
         </div>
 

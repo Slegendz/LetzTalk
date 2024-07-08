@@ -25,7 +25,7 @@ const FallbackLoader = () => (
       background: "#ffffff"
     }}
   >
-    <video width="500" height="500" autoPlay loop muted className = "z-10">
+    <video width="500" height="500" autoPlay loop muted className = "z-10 pointer-events-none">
       <source src= {LetzTalk} type="video/mp4" />
     </video>
   </div>
@@ -39,7 +39,7 @@ function App() {
   const windowSize = useWindowSize()
 
   return (
-    <div className="font-Rubik">
+    <div className="font-Rubik scroll-smooth">
       <Router>
         <Suspense fallback={<FallbackLoader />}>
           <Routes>

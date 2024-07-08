@@ -12,10 +12,12 @@ const createUserPost = async (req, res) => {
       res.status(404).json({ message: "User not found " });
     }
 
-    const picturePath = picture ? await uploadOnCloudinary(picture[0].path) : "";
+    const picturePath = picture
+      ? await uploadOnCloudinary(picture[0].path)
+      : "";
     const audioPath = audio ? await uploadOnCloudinary(audio[0].path) : "";
     const clipPath = clip ? await uploadOnCloudinary(clip[0].path) : "";
-    
+
     const newPost = await Post.create({
       userId,
       firstName: user.firstName,
@@ -48,7 +50,9 @@ const createPost = async (req, res) => {
       res.status(404).json({ message: "User not found " });
     }
 
-    const picturePath = picture ? await uploadOnCloudinary(picture[0].path) : "";
+    const picturePath = picture
+      ? await uploadOnCloudinary(picture[0].path)
+      : "";
     const audioPath = audio ? await uploadOnCloudinary(audio[0].path) : "";
     const clipPath = clip ? await uploadOnCloudinary(clip[0].path) : "";
 
@@ -76,7 +80,12 @@ const createPost = async (req, res) => {
 
 const getFeedPosts = async (req, res) => {
   try {
-    const posts = await Post.find().sort({ createdAt: -1 });
+    const page = parseInt(req.query.page) || 1;
+    const limitValue = parseInt(req.query.limit) || 4;
+    const skipValue = (page-1)*limitValue;
+
+    const posts = await Post.find().limit(limitValue).skip(skipValue).sort({ createdAt: -1 });
+
     res.status(200).json(posts); // Readed successfully
   } catch (err) {
     res.status(404).json({ message: err.message }); // Not found
@@ -87,13 +96,13 @@ const getFeedPosts = async (req, res) => {
 const getUserPost = async (req, res) => {
   try {
     const { id } = req.params; // PostId
-    const post = await Post.findById(id);
+    const posts = await Post.findById(id);
 
-    if (!post) {
+    if (!posts) {
       res.status(404).json({ message: "Post not found" });
     }
 
-    res.status(200).json(post);
+    res.status(200).json(posts);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -102,7 +111,11 @@ const getUserPost = async (req, res) => {
 const getUserPosts = async (req, res) => {
   try {
     const { userId } = req.params;
-    const posts = await Post.find({ userId }).sort({ createdAt: -1 });
+    const page = parseInt(req.query.page) || 1;
+    const limitValue = parseInt(req.query.limit) || 4;
+    const skipValue = (page-1)*limitValue;
+
+    const posts = await Post.find({ userId }).limit(limitValue).skip(skipValue).sort({ createdAt: -1 });
     res.status(200).json(posts); // Readed successfully
   } catch (err) {
     res.status(404).json({ message: err.message }); // Not found
