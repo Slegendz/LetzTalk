@@ -39,7 +39,7 @@ function App() {
   const windowSize = useWindowSize()
 
   return (
-    <div className="font-Rubik scroll-smooth">
+    <div className="font-Rubik">
       <Router>
         <Suspense fallback={<FallbackLoader />}>
           <Routes>
