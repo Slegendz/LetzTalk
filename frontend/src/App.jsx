@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import React, { useMemo, lazy, Suspense, useEffect, useState } from "react"
-import { useSelector, useDispatch } from "react-redux"
+import React, { lazy, Suspense } from "react"
+import { useSelector } from "react-redux"
 import { Navigate } from "react-router-dom"
 import "animate.css"
 import useUserActiveStatus from "./hooks/useUserActiveStatus.js"

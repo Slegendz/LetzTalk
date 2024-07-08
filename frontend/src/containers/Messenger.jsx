@@ -31,8 +31,6 @@ export default function Messenger({ logoutUser, windowSize }) {
   const [botReplyMsg, setBotReplyMsg] = useState(false)
 
   const scrollRef = useRef()
-  const typingScrollRef = useRef()
-  const dispatch = useDispatch()
   const textAreaRef = useRef()
 
   const LANGUAGE_MODEL_API_KEY = process.env.REACT_APP_LANGUAGE_MODEL_KEY
@@ -63,7 +61,7 @@ export default function Messenger({ logoutUser, windowSize }) {
 
   useEffect(() => {
     const handleKeyPress = (e) => {
-      if (e.keyCode == 13 && !e.shiftKey) {
+      if (e.keyCode === 13 && !e.shiftKey) {
         handleSubmit(e)
       }
     }

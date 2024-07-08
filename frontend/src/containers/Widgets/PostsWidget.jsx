@@ -12,54 +12,54 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
 
-  const fetchPosts = async (url) => {
-    setLoading(true)
-
-    try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      })
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch posts")
-      }
-
-      const data = await response.json()
-
-      if (page == 1) {
-        dispatch(setPosts({ posts: data }))
-      } else {
-        dispatch(setPosts({ posts: [...posts, ...data] }))
-      }
-      setHasMore(data.length > 0)
-    } catch (error) {
-      console.error("Error fetching posts:", error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
   useEffect(() => {
     const url = isProfile
       ? `${process.env.REACT_APP_BASE_URL}/posts/${userId}/posts?page=${page}`
       : `${process.env.REACT_APP_BASE_URL}/posts?page=${page}`
 
-    fetchPosts(url)
-  }, [page])
+    const fetchPosts = async (url) => {
+      setLoading(true)
 
-  const handleScroll = () => {
-    if (
-      !loading &&
-      hasMore &&
-      window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.scrollHeight - 20
-    ) {
-      setPage((prevPage) => prevPage + 1)
+      try {
+        const response = await fetch(url, {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        })
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch posts")
+        }
+
+        const data = await response.json()
+
+        if (page === 1) {
+          dispatch(setPosts({ posts: data }))
+        } else {
+          dispatch(setPosts({ posts: [...posts, ...data] }))
+        }
+        setHasMore(data.length > 0)
+      } catch (error) {
+        console.error("Error fetching posts:", error)
+      } finally {
+        setLoading(false)
+      }
     }
-  }
+
+    fetchPosts(url)
+  }, [page, isProfile])
 
   useEffect(() => {
+    const handleScroll = () => {
+      if (
+        !loading &&
+        hasMore &&
+        window.innerHeight + document.documentElement.scrollTop >=
+          document.documentElement.scrollHeight - 20
+      ) {
+        setPage((prevPage) => prevPage + 1)
+      }
+    }
+    
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [loading, hasMore])

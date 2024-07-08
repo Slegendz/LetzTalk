@@ -14,7 +14,10 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     setUserPic: (state, action) => {
-      state.user.picturePath = action.payload; 
+      state.user.picturePath = action.payload
+    },
+    setUserDetails: (state, action) => {
+      state.user = action.payload
     },
     setMode: (state, action) => {
       state.mode = action.payload
@@ -47,8 +50,8 @@ export const authSlice = createSlice({
       state.posts = updatedPosts
     },
     setOnlineUsers: (state, action) => {
-      state.onlineUsers = action.payload;
-    }
+      state.onlineUsers = action.payload
+    },
   },
 })
 
@@ -60,7 +63,8 @@ export const {
   setPosts,
   setPost,
   setOnlineUsers,
-  setUserPic
+  setUserPic,
+  setUserDetails,
 } = authSlice.actions
 
 export default authSlice.reducer

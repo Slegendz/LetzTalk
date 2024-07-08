@@ -1,7 +1,7 @@
 import { socket } from "../utils/SocketConn.js"
 import { useDispatch, useSelector } from "react-redux"
 import { setLogout, setOnlineUsers } from "../redux/authSlice.jsx"
-import React, { useEffect, useState } from "react"
+import { useEffect } from "react"
 
 const useUserActiveStatus = () => {
   const user = useSelector((state) => state.user)

@@ -20,18 +20,6 @@ const ProfilePage = ({ logoutUser }) => {
   const { userId } = useParams()
   const token = useSelector((state) => state.token)
 
-  const getUser = async () => {
-    const response = await fetch(
-      `${process.env.REACT_APP_BASE_URL}/users/${userId}`,
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    )
-    const data = await response.json()
-    setUser(data)
-  }
-
   const updateUser = async (formData) => {
     const response = await fetch(
       `${process.env.REACT_APP_BASE_URL}/users/updateUser`,
@@ -77,8 +65,19 @@ const ProfilePage = ({ logoutUser }) => {
   }
 
   useEffect(() => {
+    const getUser = async () => {
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/users/${userId}`,
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      const data = await response.json()
+      setUser(data)
+    }
     getUser()
-  }, [])
+  }, [token, userId])
 
   if (!user) return null
 
@@ -99,8 +98,6 @@ const ProfilePage = ({ logoutUser }) => {
                   user.coverImagePath
                 : CoverImg
             }
-            loading="lazy"
-            decoding="async"
             alt="coverImg"
             className={`${blurEffect ? "animate-blurImage" : ""}  aspect-video max-h-[500px] w-full object-cover object-center`}
           />

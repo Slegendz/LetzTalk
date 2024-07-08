@@ -8,7 +8,7 @@ const AdvertWidget = () => {
         <p>Sponsored</p>
         <p>Create Ad</p>
       </div>
-      <img className = "rounded-lg my-2" width="100%" height="auto" alt="advert" src= {david} />
+      <img className = "rounded-lg my-2" loading = "lazy" width="100%" height="auto" alt="advert" src= {david} />
       <div className = "my-2">
         <p className = "text-cyan-400"> David Shop </p>
         <p> davidShop.com </p>
