@@ -7,6 +7,8 @@ const initialState = {
   token: null,
   posts: [],
   onlineUsers: [],
+  profilePosts: [],
+  homePage: 1,
 }
 
 export const authSlice = createSlice({
@@ -27,6 +29,7 @@ export const authSlice = createSlice({
     setLogin: (state, action) => {
       state.user = action.payload.user
       state.token = action.payload.token
+      state.homePage = 1
     },
     setLogout: (state) => {
       state.user = null
@@ -41,6 +44,12 @@ export const authSlice = createSlice({
     },
     setPosts: (state, action) => {
       state.posts = action.payload.posts
+    },
+    setProfilePosts: (state, action) => {
+      state.profilePosts = action.payload.profilePosts
+    },
+    setHomePage: (state) => {
+      state.homePage = state.homePage + 1
     },
     setPost: (state, action) => {
       const updatedPosts = state.posts.map((post) => {
@@ -64,6 +73,8 @@ export const {
   setPost,
   setOnlineUsers,
   setUserPic,
+  setProfilePosts,
+  setHomePage,
   setUserDetails,
 } = authSlice.actions
 

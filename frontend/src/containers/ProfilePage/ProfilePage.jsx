@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom"
 import Navbar from "../Navbar/Navbar"
 import FriendListWidget from "../Widgets/FriendWidget"
 import MyPostWidget from "../Widgets/MyPostWidget"
-import PostsWidget from "../Widgets/PostsWidget"
+import ProfilePostsWidget from "../Widgets/ProfilePostsWidget"
 import UserWidget from "../Widgets/UserWidget"
 import CoverImg from "../../assets/Img/coverImg.jpg"
 import React from "react"
@@ -131,7 +131,7 @@ const ProfilePage = ({ logoutUser }) => {
             {loggedInUser._id === user._id && (
               <MyPostWidget picturePath={user.picturePath} isProfile />
             )}
-            <PostsWidget userId={userId} isProfile />
+            <ProfilePostsWidget userId={userId} />
           </div>
         </div>
       </div>

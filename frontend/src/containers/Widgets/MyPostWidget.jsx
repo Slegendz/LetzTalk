@@ -1,7 +1,7 @@
 import UserImage from "../../components/UserImage"
 import { useState, useRef, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { setPosts } from "../../redux/authSlice"
+import { setPosts, setProfilePosts } from "../../redux/authSlice"
 import { FaRegImage } from "react-icons/fa6"
 import { MdAudiotrack } from "react-icons/md"
 import { FaPaperclip } from "react-icons/fa"
@@ -21,6 +21,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
   const [post, setPost] = useState("")
   const { _id } = useSelector((state) => state.user)
   const token = useSelector((state) => state.token)
+  const posts = useSelector((state) => state.posts)
 
   const myPostRef = useRef()
 
@@ -30,7 +31,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
     formData.append("description", post)
 
     setDisable(true)
-    
+
     if (image) {
       formData.append("picture", image)
       // formData.append("picturePath", image.name)
@@ -40,7 +41,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
       formData.append("clip", clip)
       // formData.append("clipPath", clip.name)
     }
-    
+
     if (audio) {
       formData.append("audio", audio)
       // formData.append("audioPath", audio.name)
@@ -63,16 +64,17 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
           body: formData,
         }
       )
-      const posts = await response.json()
-      dispatch(setPosts({ posts }))
+      const data = await response.json()
+      dispatch(setProfilePosts({ profilePosts: data.posts }))
+      dispatch(setPosts({ posts: [data.newPost, ...posts] }))
     }
-    
+
     setImage(null)
     setIsImage(false)
-    
+
     setClip(null)
     setIsClip(false)
-    
+
     setAudio(null)
     setIsAudio(false)
     setDisable(false)
@@ -126,7 +128,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
                 setImage(e.target.files[0])
               }}
             />
-            <span className="flex w-full md:items-center md:justify-center wrapWord">
+            <span className="wrapWord flex w-full md:items-center md:justify-center">
               {!image
                 ? "Upload a file ( PNG, JPG, GIF )"
                 : image.name.length > 40
@@ -153,7 +155,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
                 setAudio(e.target.files[0])
               }}
             />
-            <span className="flex w-full md:items-center md:justify-center wrapWord">
+            <span className="wrapWord flex w-full md:items-center md:justify-center">
               {!audio
                 ? "Upload a file ( Mp3, Audio File)"
                 : audio.name.length > 40
@@ -180,7 +182,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
                 setClip(e.target.files[0])
               }}
             />
-            <span className="flex w-full md:items-center md:justify-center wrapWord">
+            <span className="wrapWord flex w-full md:items-center md:justify-center">
               {!clip
                 ? "Upload a file ( MP4, mkv )"
                 : clip.name.length > 40
@@ -203,7 +205,12 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
           }}
         >
           <FaRegImage />
-          <p className={`${isImage ? "text-indigo-400" : "" } font-bold cursor-pointer hover:text-blue-400`}> Image </p>
+          <p
+            className={`${isImage ? "text-indigo-400" : ""} cursor-pointer font-bold hover:text-blue-400`}
+          >
+            {" "}
+            Image{" "}
+          </p>
         </div>
 
         <div
@@ -215,7 +222,11 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
           }}
         >
           <FaPaperclip />
-          <p className= {`${isClip ? "text-indigo-400" : "" } font-bold hover:text-blue-400 cursor-pointer `}>Clip</p>
+          <p
+            className={`${isClip ? "text-indigo-400" : ""} cursor-pointer font-bold hover:text-blue-400 `}
+          >
+            Clip
+          </p>
         </div>
 
         <div
@@ -227,7 +238,11 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
           }}
         >
           <MdAudiotrack />
-          <p className={`${isAudio ? "text-indigo-400" : "" } font-bold cursor-pointer hover:text-blue-400`}>Audio</p>
+          <p
+            className={`${isAudio ? "text-indigo-400" : ""} cursor-pointer font-bold hover:text-blue-400`}
+          >
+            Audio
+          </p>
         </div>
 
         <button

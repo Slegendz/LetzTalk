@@ -1,5 +1,5 @@
 import express from "express";
-import { getFeedPosts, getUserPosts, likePosts, postComment, getComments, getUserPost } from "../controllers/posts.controller.js";
+import { getFeedPosts, getUserPosts, likePosts, postComment, getComments, updatePostUser, getUserPost } from "../controllers/posts.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
@@ -8,6 +8,7 @@ const router = express.Router();
 router.get("/", verifyJWT, getFeedPosts);
 router.get("/:userId/posts", verifyJWT, getUserPosts);
 router.get("/:id", verifyJWT, getUserPost);
+router.patch("/updatePostUser", verifyJWT, updatePostUser);
 
 /* Updating the like */
 router.patch("/:id/like", verifyJWT, likePosts);

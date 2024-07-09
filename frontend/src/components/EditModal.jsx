@@ -7,7 +7,7 @@ import * as yup from "yup"
 import { useDispatch, useSelector } from "react-redux"
 import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { setUserPic } from "../redux/authSlice"
+import { setUserPic, setUserDetails, setPosts } from "../redux/authSlice"
 
 const EditModal = ({ setShowModal, user, setUser }) => {
   const {
@@ -80,6 +80,27 @@ const EditModal = ({ setShowModal, user, setUser }) => {
         theme: "light",
         hideProgressBar: false,
       })
+
+      const userObj = {}
+      userObj["userPicturePath"] = updatedUser.picturePath;
+      userObj["userId"] = updatedUser._id;
+
+      const updatePostUser = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/posts/updatePostUser`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(userObj),
+        }
+      )
+      const updatedPosts = await updatePostUser.json()
+
+      if (updatePostUser.ok) {
+        dispatch(setPosts({ posts: updatedPosts }))
+      }
     } else {
       toast.error(`${updatedUser.message}`, {
         position: "top-right",
@@ -94,10 +115,14 @@ const EditModal = ({ setShowModal, user, setUser }) => {
 
   const handleSubmitUser = async (values, onSubmitProps) => {
     const formData = new FormData()
+    const userObj = {}
+
     formData.append("id", _id)
+    userObj["userId"] = _id
 
     for (let value in values) {
       formData.append(value, values[value])
+      userObj[value] = values[value]
     }
 
     const response = await fetch(
@@ -114,6 +139,8 @@ const EditModal = ({ setShowModal, user, setUser }) => {
 
     if (response.ok) {
       setUser(data)
+      dispatch(setUserDetails(data))
+
       toast.success("User Updated", {
         position: "top-right",
         autoClose: 3000,
@@ -121,6 +148,25 @@ const EditModal = ({ setShowModal, user, setUser }) => {
         theme: "light",
         hideProgressBar: false,
       })
+
+      console.log(userObj)
+      const updatePostUser = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/posts/updatePostUser`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(userObj),
+        }
+      )
+      const updatedPosts = await updatePostUser.json()
+
+      if (updatePostUser.ok) {
+        dispatch(setPosts({ posts: updatedPosts }))
+      }
+
       setTimeout(() => {
         setShowModal(false)
       }, 1000)

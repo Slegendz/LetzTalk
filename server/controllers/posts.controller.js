@@ -34,7 +34,7 @@ const createUserPost = async (req, res) => {
     await newPost.save();
 
     const posts = await Post.find({ userId }).sort({ createdAt: -1 });
-    res.status(200).json(posts);
+    res.status(200).json({ posts, newPost });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -71,8 +71,8 @@ const createPost = async (req, res) => {
     });
     await newPost.save();
 
-    const post = await Post.find().sort({ createdAt: -1 });
-    res.status(201).json(post); // Created something
+    const posts = await Post.find().sort({ createdAt: -1 });
+    res.status(201).json({ posts, newPost }); // Created something
   } catch (err) {
     res.status(409).json({ message: err.message }); // Error while creating
   }
@@ -82,9 +82,12 @@ const getFeedPosts = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limitValue = parseInt(req.query.limit) || 4;
-    const skipValue = (page-1)*limitValue;
+    const skipValue = (page - 1) * limitValue;
 
-    const posts = await Post.find().limit(limitValue).skip(skipValue).sort({ createdAt: -1 });
+    const posts = await Post.find()
+      .limit(limitValue)
+      .skip(skipValue)
+      .sort({ createdAt: -1 });
 
     res.status(200).json(posts); // Readed successfully
   } catch (err) {
@@ -96,13 +99,13 @@ const getFeedPosts = async (req, res) => {
 const getUserPost = async (req, res) => {
   try {
     const { id } = req.params; // PostId
-    const posts = await Post.findById(id);
+    const post = await Post.findById(id);
 
-    if (!posts) {
+    if (!post) {
       res.status(404).json({ message: "Post not found" });
     }
 
-    res.status(200).json(posts);
+    res.status(200).json(post);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -113,9 +116,12 @@ const getUserPosts = async (req, res) => {
     const { userId } = req.params;
     const page = parseInt(req.query.page) || 1;
     const limitValue = parseInt(req.query.limit) || 4;
-    const skipValue = (page-1)*limitValue;
+    const skipValue = (page - 1) * limitValue;
 
-    const posts = await Post.find({ userId }).limit(limitValue).skip(skipValue).sort({ createdAt: -1 });
+    const posts = await Post.find({ userId })
+      .limit(limitValue)
+      .skip(skipValue)
+      .sort({ createdAt: -1 });
     res.status(200).json(posts); // Readed successfully
   } catch (err) {
     res.status(404).json({ message: err.message }); // Not found
@@ -207,6 +213,32 @@ const getComments = async (req, res) => {
   }
 };
 
+const updatePostUser = async (req, res) => {
+  try {
+    const { firstName, lastName, location, userId, userPicturePath } = req.body;
+
+    const posts = await Post.find({ userId });
+
+    if (!posts || posts.length === 0) {
+      return res.status(404).json({ message: "Posts not found" });
+    }
+
+    for (let i = 0; i < posts.length; i++) {
+      if (firstName) posts[i].firstName = firstName;
+      if (lastName) posts[i].lastName = lastName;
+      if (location) posts[i].location = location;
+      if (userPicturePath) posts[i].userPicturePath = userPicturePath;
+      await posts[i].save();
+    }
+
+    const feedPosts = await Post.find().sort({ createdAt: -1 });
+
+    res.status(200).json(feedPosts);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 export {
   likePosts,
   getUserPosts,
@@ -216,4 +248,5 @@ export {
   createUserPost,
   postComment,
   getComments,
+  updatePostUser,
 };

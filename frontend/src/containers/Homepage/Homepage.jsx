@@ -20,7 +20,7 @@ const HomePage = ({ logoutUser }) => {
         </div>
         <div className="col-span-7 lg:col-span-3">
           <MyPostWidget picturePath={picturePath} />
-          <PostsWidget userId={_id} />
+          <PostsWidget />
         </div>
         <div className="hidden lg:block lg:col-span-2">
           <AdvertWidget />

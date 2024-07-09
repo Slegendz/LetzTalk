@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { setPosts, setHomePage } from "../../redux/authSlice"
+import { setProfilePosts } from "../../redux/authSlice"
 import PostWidget from "./PostWidget.jsx"
 
-const PostsWidget = () => {
+const PostsWidget = ({ userId }) => {
   const dispatch = useDispatch()
-  const posts = useSelector((state) => state.posts)
+  const profilePosts = useSelector((state) => state.profilePosts)
   const token = useSelector((state) => state.token)
-  const homePage = useSelector((state) => state.homePage)
 
   const [loading, setLoading] = useState(true)
+  const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
 
   useEffect(() => {
-    const url = `${process.env.REACT_APP_BASE_URL}/posts?page=${homePage}`
+    const url = `${process.env.REACT_APP_BASE_URL}/posts/${userId}/posts?page=${page}`
 
     const fetchPosts = async (url) => {
       setLoading(true)
-      
+
       try {
         const response = await fetch(url, {
           method: "GET",
@@ -30,10 +30,12 @@ const PostsWidget = () => {
 
         const data = await response.json()
 
-        if (homePage === 1) {
-          dispatch(setPosts({ posts: data }))
+        if (page === 1) {
+          dispatch(setProfilePosts({ profilePosts: data }))
         } else {
-          dispatch(setPosts({ posts: [...posts, ...data] }))
+          dispatch(
+            setProfilePosts({ profilePosts: [...profilePosts, ...data] })
+          )
         }
         setHasMore(data.length > 0)
       } catch (error) {
@@ -44,7 +46,7 @@ const PostsWidget = () => {
     }
 
     fetchPosts(url)
-  }, [homePage])
+  }, [page])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,7 +56,7 @@ const PostsWidget = () => {
         window.innerHeight + document.documentElement.scrollTop >=
           document.documentElement.scrollHeight - 20
       ) {
-        dispatch(setHomePage())
+        setPage((prevPage) => prevPage + 1)
       }
     }
 
@@ -64,8 +66,8 @@ const PostsWidget = () => {
 
   return (
     <>
-      {posts.length > 0 ? (
-        posts.map(
+      {profilePosts.length > 0 ? (
+        profilePosts.map(
           ({
             _id,
             userId,
