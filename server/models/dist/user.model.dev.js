@@ -48,12 +48,25 @@ var userSchema = new Schema({
   },
   lastOnline: {
     type: String,
-    "default": ""
+    "default": new Date().toISOString()
   },
   occupation: String,
   location: String,
   impressions: Number,
-  viewedProfile: Number
+  viewedProfile: Number,
+  refreshToken: String,
+  twitterUrl: {
+    type: String,
+    "default": ""
+  },
+  instagramUrl: {
+    type: String,
+    "default": ""
+  },
+  linkedinUrl: {
+    type: String,
+    "default": ""
+  }
 }, {
   timestamps: true
 });

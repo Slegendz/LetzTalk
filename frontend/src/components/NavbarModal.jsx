@@ -29,7 +29,7 @@ const NavbarModal = ({ id, picturePath, logoutUser }) => {
   return (
     <div ref={modalRef} className="relative flex items-center">
       <button onClick={() => setShowModal(!showModal)}>
-        <UserImage image={picturePath} />
+        <UserImage image={picturePath} height = {40} width = {40} />
       </button>
 
       {/* Show Modal */}

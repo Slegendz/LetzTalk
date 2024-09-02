@@ -67,9 +67,9 @@ const PostWidget = ({
         <LazyLoadImage
           className="w-full h-auto max-h-[380px] bg-[#121212] object-contain md:max-h-[500px]"
           alt="Post"
-          effect="blur"
+          effect="opacity"
           wrapperProps={{
-            style: { transitionDelay: "0.4s" },
+            style: { transitionDelay: "0.2s" },
           }}
           // src={`${process.env.REACT_APP_BASE_URL}/assets/${picturePath}`}
           src={picturePath}

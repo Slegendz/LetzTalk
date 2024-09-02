@@ -14,9 +14,9 @@ export default function Conversation({
   const onlineUsers = useSelector((state) => state.onlineUsers)
   const token = useSelector((state) => state.token)
 
-  let timeStamp
-  if (!isBot) {
-    timeStamp = formatDistanceToNowStrict(friend?.lastOnline)
+  let timeStamp = ""
+  if (friend?.lastOnline && !isBot) {
+    timeStamp = formatDistanceToNowStrict(friend.lastOnline)
   }
 
   useEffect(() => {

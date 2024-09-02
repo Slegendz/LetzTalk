@@ -57,7 +57,7 @@ const UserWidget = ({ userId, picturePath }) => {
     <>
       <div className="rounded-xl bg-white p-4 shadow-md drop-shadow-lg dark:bg-[#282828]">
         <div gap="1rem" className="relative mb-4 flex items-center gap-4">
-          <UserImage image={picturePath} />
+          <UserImage image={picturePath} width = {50} height = {50} />
           <div>
             <h4
               onClick={() => navigate(`/profile/${userId}`)}

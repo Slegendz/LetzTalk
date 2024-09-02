@@ -81,7 +81,7 @@ const createPost = async (req, res) => {
 const getFeedPosts = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limitValue = parseInt(req.query.limit) || 4;
+    const limitValue = parseInt(req.query.limit) || 5;
     const skipValue = (page - 1) * limitValue;
 
     const posts = await Post.find()
@@ -115,7 +115,7 @@ const getUserPosts = async (req, res) => {
   try {
     const { userId } = req.params;
     const page = parseInt(req.query.page) || 1;
-    const limitValue = parseInt(req.query.limit) || 4;
+    const limitValue = parseInt(req.query.limit) || 5;
     const skipValue = (page - 1) * limitValue;
 
     const posts = await Post.find({ userId })
@@ -198,9 +198,9 @@ const postComment = async (req, res) => {
 };
 
 const getComments = async (req, res) => {
-  const { id } = req.params; // PostId for which to get comment
-
   try {
+    const { id } = req.params; // PostId for which to get comment
+
     const post = await Post.findById(id);
 
     if (!post) {

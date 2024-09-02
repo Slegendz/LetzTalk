@@ -24,15 +24,13 @@ const getMessage = async (req, res) => {
 };
 
 const postPrompt = async (req, res) => {
- 
-  const { conversationId, senderId, text } = req.body;
-
-  const newMessage = new Message({ conversationId, senderId, text });
-  await newMessage.save();
-  // res.status(200).json(newMessage);
-
   try {
-    
+    const { conversationId, senderId, text } = req.body;
+
+    const newMessage = new Message({ conversationId, senderId, text });
+    await newMessage.save();
+    // res.status(200).json(newMessage);
+
     console.log(data);
     res.send(data);
   } catch (error) {

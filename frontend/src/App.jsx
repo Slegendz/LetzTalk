@@ -6,6 +6,7 @@ import "animate.css"
 import useUserActiveStatus from "./hooks/useUserActiveStatus.js"
 import useWindowSize from "./hooks/useWindowSize.js"
 import LetzTalk from "./assets/LetzTalk.mp4"
+import AuthVerify from "./utils/AuthVerify.js"
 
 const ProfilePage = lazy(
   () => import("./containers/ProfilePage/ProfilePage.jsx")
@@ -22,11 +23,18 @@ const FallbackLoader = () => (
       justifyContent: "center",
       alignItems: "center",
       height: "100vh",
-      background: "#ffffff"
+      background: "#ffffff",
     }}
   >
-    <video width="500" height="500" autoPlay loop muted className = "z-10 pointer-events-none">
-      <source src= {LetzTalk} type="video/mp4" />
+    <video
+      width="500"
+      height="500"
+      autoPlay
+      loop
+      muted
+      className="pointer-events-none z-10"
+    >
+      <source src={LetzTalk} type="video/mp4" />
     </video>
   </div>
 )
@@ -44,39 +52,46 @@ function App() {
         <Suspense fallback={<FallbackLoader />}>
           <Routes>
             <Route path="/" element={<LoginPage />} />
-            <Route
-              path="/home"
-              element={
-                isAuth ? (
-                  <Homepage logoutUser={logoutUser} />
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            />
-            <Route
-              path="/profile/:userId"
-              element={
-                isAuth ? (
-                  <ProfilePage logoutUser={logoutUser} />
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            />
-            <Route
-              path="/messenger"
-              element={
-                isAuth ? (
-                  <Messenger logoutUser={logoutUser} windowSize={windowSize} />
-                ) : (
-                  <Navigate to="/" />
-                )
-              }
-            />
+
+            {/* <Route element={<Prefetch />}> */}
+              <Route
+                path="/home"
+                element={
+                  isAuth ? (
+                    <Homepage logoutUser={logoutUser} />
+                  ) : (
+                    <Navigate to="/" />
+                  )
+                }
+              />
+              <Route
+                path="/profile/:userId"
+                element={
+                  isAuth ? (
+                    <ProfilePage logoutUser={logoutUser} />
+                  ) : (
+                    <Navigate to="/" />
+                  )
+                }
+              />
+              <Route
+                path="/messenger"
+                element={
+                  isAuth ? (
+                    <Messenger
+                      logoutUser={logoutUser}
+                      windowSize={windowSize}
+                    />
+                  ) : (
+                    <Navigate to="/" />
+                  )
+                }
+              />
+            {/* </Route> */}
             <Route path="*" element={<Missing />} />
           </Routes>
         </Suspense>
+        <AuthVerify />
       </Router>
     </div>
   )

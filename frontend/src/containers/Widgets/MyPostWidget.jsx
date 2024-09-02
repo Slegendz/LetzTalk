@@ -101,7 +101,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
     >
       <div className="flex items-center gap-4">
         <div className="hidden xss:block">
-          <UserImage image={picturePath} />
+          <UserImage image={picturePath} width = {50} height = {50} />
         </div>
         <input
           className="overflow-none flex w-full flex-1 resize-none rounded-3xl bg-gray-100 p-3 px-4 text-gray-700 outline-none"

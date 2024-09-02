@@ -34,7 +34,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   return (
     <div className="flex items-center justify-between text-gray-700 dark:text-gray-300">
       <div className="flex gap-4">
-        <UserImage userId={friendId} image={userPicturePath} />
+        <UserImage width = {50} height = {50} image={userPicturePath} />
         <div>
           {/* <a href={`${process.env.REACT_APP_BASE_URL}/users/${friendId}`}>
             {name}

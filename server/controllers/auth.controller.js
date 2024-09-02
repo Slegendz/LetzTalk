@@ -7,25 +7,25 @@ import uploadOnCloudinary from "../utils/fileUpload.js";
 
 // Async as we are making a call to mongodb so it will take time and we are passing response and request from server.
 const register = async (req, res) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    password,
-    friends,
-    occupation,
-    location,
-    lastOnline,
-  } = req.body;
-
-  const { picture, coverImage } = req.files;
-
-  const picturePath = await uploadOnCloudinary(picture[0].path);
-  const coverImagePath = coverImage
-    ? await uploadOnCloudinary(coverImage[0].path)
-    : "";
-
   try {
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      friends,
+      occupation,
+      location,
+      lastOnline,
+    } = req.body;
+
+    const { picture, coverImage } = req.files;
+
+    const picturePath = await uploadOnCloudinary(picture[0].path);
+    const coverImagePath = coverImage
+      ? await uploadOnCloudinary(coverImage[0].path)
+      : "";
+
     const salt = await bcrypt.genSalt();
     const hashedPwd = await bcrypt.hash(password, salt);
 
@@ -56,9 +56,9 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
-
   try {
+    const { email, password } = req.body;
+
     // Using findOne method to find User email in mongoose
     const user = await User.findOne({ email: email });
 
@@ -96,11 +96,11 @@ const login = async (req, res) => {
 
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
-      secure : false,
-      sameSite: "None",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-    
+
     console.log("Successful");
 
     res.status(200).json({ accessToken, user });
@@ -138,10 +138,10 @@ const refresh = async (req, res) => {
         const accessToken = jwt.sign(
           { id: foundUser._id },
           process.env.ACCESS_TOKEN_SECRET,
-          // { expiresIn: "1d" }
+          { expiresIn: "1d" }
         );
 
-        res.json(accessToken);
+        res.json({ foundUser, accessToken });
       }
     );
   } catch (err) {
@@ -150,26 +150,28 @@ const refresh = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const cookies = req.cookies;
-      const timeStamp = new Date().toISOString()
+  try {
+    const { id } = req.params;
+    const cookies = req.cookies;
+    const timeStamp = new Date().toISOString();
 
-      const foundUser = await User.findOne({ _id: id });
+    const foundUser = await User.findOne({ _id: id });
 
-      foundUser.lastOnline = timeStamp;
-      foundUser.refreshToken = "";
-      await foundUser.save();
+    foundUser.lastOnline = timeStamp;
+    foundUser.refreshToken = "";
+    await foundUser.save();
 
-      if (!cookies?.jwt){
-        return res.status(200).json({ message: "User updated. No cookie existed." }); 
-      }
-    
-      res.clearCookie("jwt", { httpOnly: true });
-      res.status(200).json({ message: "Cookie cleared and user updated" });
-    } catch (err) {
-      res.status(500).json({ error: err.message });
+    if (!cookies?.jwt) {
+      return res
+        .status(200)
+        .json({ message: "User updated. No cookie existed." });
     }
+
+    res.clearCookie("jwt", { httpOnly: true });
+    res.status(200).json({ message: "Cookie cleared and user updated" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 export { register, login, refresh, logout };

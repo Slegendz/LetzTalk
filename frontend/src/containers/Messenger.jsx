@@ -10,6 +10,7 @@ import { setFriends } from "../redux/authSlice.jsx"
 import EmojiModal from "../components/EmojiModal.jsx"
 import Message from "./Message.jsx"
 import TypingMessage from "./TypingMessage.jsx"
+import { GoogleGenerativeAI } from "@google/generative-ai"
 
 export default function Messenger({ logoutUser, windowSize }) {
   const [conversations, setConversations] = useState(null)
@@ -33,8 +34,9 @@ export default function Messenger({ logoutUser, windowSize }) {
   const scrollRef = useRef()
   const textAreaRef = useRef()
 
-  const LANGUAGE_MODEL_API_KEY = process.env.REACT_APP_LANGUAGE_MODEL_KEY
-  const LANGUAGE_MODEL_URL = `https://generativelanguage.googleapis.com/v1beta1/models/chat-bison-001:generateMessage?key=${LANGUAGE_MODEL_API_KEY}`
+  const genAI = new GoogleGenerativeAI(process.env.REACT_APP_LANGUAGE_MODEL_KEY)
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
+
   const botId = process.env.REACT_APP_BOT_ID
 
   useAutosizeTextArea(textAreaRef.current, newMessage)
@@ -93,34 +95,21 @@ export default function Messenger({ logoutUser, windowSize }) {
       if (newMessage !== "") {
         setBotReplyMsg(true)
 
-        const payload = {
-          prompt: { messages: [{ content: newMessage }] },
-          temperature: 0.1,
-          candidate_count: 1,
-        }
+        const payload = newMessage
         setNewMessage("")
 
         try {
-          const response = await fetch(LANGUAGE_MODEL_URL, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-            method: "POST",
-          })
-          const data = await response.json()
+          const result = await model.generateContent(payload)
 
           const message = {
             conversationId: conversations,
             senderId: botId,
-            text: data.candidates[0].content,
+            text: result.response.text(),
             createdAt: new Date(),
           }
 
-          if (response.ok) {
-            setMessages([...messages, message])
-            setBotReplyMsg(false)
-          }
+          setMessages([...messages, message])
+          setBotReplyMsg(false)
 
           try {
             const response = await fetch(
@@ -265,21 +254,22 @@ export default function Messenger({ logoutUser, windowSize }) {
               />
             </div>
 
-            {friends.map((friend, idx) => (
-              <div
-                key={idx}
-                onClick={() => {
-                  getFriendConversation(friend, false)
-                }}
-              >
-                <Conversation
-                  conversations={conversations}
-                  setCurrentChat={setCurrentChat}
-                  setMessages={setMessages}
-                  friend={friend}
-                />
-              </div>
-            ))}
+            {friends?.length &&
+              friends.map((friend, idx) => (
+                <div
+                  key={idx}
+                  onClick={() => {
+                    getFriendConversation(friend, false)
+                  }}
+                >
+                  <Conversation
+                    conversations={conversations}
+                    setCurrentChat={setCurrentChat}
+                    setMessages={setMessages}
+                    friend={friend}
+                  />
+                </div>
+              ))}
           </div>
         </div>
 

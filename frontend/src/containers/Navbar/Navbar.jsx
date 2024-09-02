@@ -23,13 +23,13 @@ const Navbar = ({ id, picturePath, logoutUser }) => {
             onClick={() => navigate("/home")}
             src={`${mode === "light" ? LogoWhite : LogoDark}`}
             alt="Logo"
-            className="w-[40%] min-w-[90px] max-w-[120px] cursor-pointer"
+            className="w-[40%] min-w-[90px] max-w-[110px] cursor-pointer"
           />
           <label className="relative hidden lg:block lg:w-[56%]">
             <input
               type="search"
               placeholder="Search"
-              className="w-full rounded-3xl px-4 py-[12px] text-black outline-none"
+              className="w-full rounded-3xl px-4 py-[10px] text-black outline-none"
             />
           </label>
         </div>
@@ -39,36 +39,36 @@ const Navbar = ({ id, picturePath, logoutUser }) => {
         <div className="flex w-1/2 items-center justify-end gap-4 md:gap-6">
           <div className="hidden md:flex md:items-center md:justify-end md:gap-4">
             <button
-              className="h-[50px] w-[50px] rounded-full  text-gray-700 transition-all duration-500 hover:bg-[#ffffff6c] hover:text-gray-500"
+              className="h-[40px] w-[40px] rounded-full  text-gray-700 transition-all duration-500 hover:bg-[#ffffff6c] hover:text-gray-500"
               onClick={() => navigate("/home")}
             >
-              <FaHome className="h-full w-full p-[12px]" />
+              <FaHome className="h-full w-full p-[8px]" />
             </button>
             <button
-              className="h-[50px] w-[50px] rounded-full  text-gray-700 transition-all duration-500 hover:bg-[#ffffff6c] hover:text-gray-500"
+              className="h-[40px] w-[40px] rounded-full  text-gray-700 transition-all duration-500 hover:bg-[#ffffff6c] hover:text-gray-500"
               onClick={() =>
                 dispatch(setMode(mode === "light" ? "dark" : "light"))
               }
             >
               {mode === "light" ? (
-                <MdOutlineLightMode className="h-full w-full p-[12px]" />
+                <MdOutlineLightMode className="h-full w-full p-[8px]" />
               ) : (
-                <MdOutlineDarkMode className="h-full w-full p-[12px]" />
+                <MdOutlineDarkMode className="h-full w-full p-[8px]" />
               )}
             </button>
 
             <button
-              className="h-[50px] w-[50px] rounded-full  text-gray-700 transition-all duration-500 hover:bg-[#ffffff6c] hover:text-gray-500"
+              className="h-[40px] w-[40px] rounded-full  text-gray-700 transition-all duration-500 hover:bg-[#ffffff6c] hover:text-gray-500"
               onClick={() => navigate("/home")}
             >
-              <IoIosNotifications className="h-full w-full p-[12px]" />
+              <IoIosNotifications className="h-full w-full p-[8px]" />
             </button>
 
             <button
-              className="h-[50px] w-[50px] rounded-full text-gray-700 transition-all duration-500 hover:bg-[#ffffff6c] hover:text-gray-500"
+              className="h-[40px] w-[40px] rounded-full text-gray-700 transition-all duration-500 hover:bg-[#ffffff6c] hover:text-gray-500"
               onClick={() => navigate("/messenger")}
             >
-              <FiMessageSquare className="h-full w-full p-[12px]" />
+              <FiMessageSquare className="h-full w-full p-[8px]" />
             </button>
           </div>
 

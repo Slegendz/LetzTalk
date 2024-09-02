@@ -5,13 +5,13 @@ import Conversation from "../models/conversation.model.js";
 // New Conversation
 
 const newConversation = async (req, res) => {
-  const { senderId, receiverId } = req.body;
-
-  const newConversation = new Conversation({
-    members: [senderId, receiverId],
-  });
-
   try {
+    const { senderId, receiverId } = req.body;
+
+    const newConversation = new Conversation({
+      members: [senderId, receiverId],
+    });
+
     const savedConversation = await newConversation.save();
     res.status(200).json(savedConversation);
   } catch (err) {
@@ -19,13 +19,12 @@ const newConversation = async (req, res) => {
   }
 };
 
-
 // The $in operator is used to find documents where a specified field's value is within a given list of values.
 
 // Get Conversation of the user
-const getConversation =  async (req, res) => {
-  const { userId } = req.params;
+const getConversation = async (req, res) => {
   try {
+    const { userId } = req.params;
     const conversation = await Conversation.find({
       members: { $in: [userId] },
     });
@@ -39,14 +38,14 @@ const getConversation =  async (req, res) => {
 
 // The $all operator is used to find documents where an array field contains all specified elements, regardless of order.
 const getMembersConversation = async (req, res) => {
-  const { firstUserId, secondUserId } = req.params;
-
-  console.log(firstUserId, secondUserId);
   try {
+    const { firstUserId, secondUserId } = req.params;
+
+    console.log(firstUserId, secondUserId);
     const conversation = await Conversation.findOne({
       members: { $all: [firstUserId, secondUserId] },
     });
-    console.log(conversation)
+    console.log(conversation);
     res.status(200).json(conversation);
   } catch (err) {
     res.status(500).json(err);
