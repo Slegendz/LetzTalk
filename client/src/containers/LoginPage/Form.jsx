@@ -42,6 +42,8 @@ const initialValuesLogin = {
 
 const Form = () => {
   const [pageType, setPageType] = useState("register")
+  const [disable, setDisable] = useState(false)
+
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const isLogin = pageType === "login"
@@ -54,10 +56,10 @@ const Form = () => {
     for (let value in values) {
       formData.append(value, values[value])
     }
-    formData.append("picturePath", values.picture.name)
+    // formData.append("picturePath", values.picture.name)
 
-    if(values.coverImage) formData.append("coverImagePath", values.coverImage.name)
-    else formData.append("coverImagePath", "");
+    // if(values.coverImage) formData.append("coverImagePath", values.coverImage.name)
+    // else formData.append("coverImagePath", "");
 
     const savedUserResponse = await fetch(
       `${import.meta.env.VITE_BASE_URL}/auth/register`,
@@ -66,20 +68,26 @@ const Form = () => {
         body: formData,
       }
     )
+
     const savedUser = await savedUserResponse.json()
     onSubmitProps.resetForm()
 
+    setDisable(false)
     if (savedUser) {
       setPageType("login")
     }
   }
 
   const login = async (values, onSubmitProps) => {
-    const loggedInResponse = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    })
+    const loggedInResponse = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/auth/login`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(values),
+      }
+    )
     const loggedIn = await loggedInResponse.json()
 
     onSubmitProps.resetForm()
@@ -88,12 +96,12 @@ const Form = () => {
       dispatch(
         setLogin({
           user: loggedIn.user,
-          token: loggedIn.token,
+          token: loggedIn.accessToken,
         })
       )
       navigate("/home")
     } else {
-      toast.error("Email or password is Incorrect", {
+      toast.error(`${loggedIn.message}`, {
         position: "top-right",
         autoClose: 3000,
         newestOnTop: true,
@@ -101,9 +109,11 @@ const Form = () => {
         hideProgressBar: false,
       })
     }
+    setDisable(false)
   }
 
   const handleFormSubmit = async (values, onSubmitProps) => {
+    setDisable(true)
     if (isLogin) await login(values, onSubmitProps)
     if (isRegister) await register(values, onSubmitProps)
   }
@@ -126,89 +136,86 @@ const Form = () => {
           handleBlur,
         }) => (
           <form onSubmit={handleSubmit}>
-            <div>
-              {isRegister && (
-                <>
-                  <div className="md:flex md:gap-6">
-                    <div className="relative mb-6 w-full">
-                      <input
-                        name="firstName"
-                        aria-label="First Name"
-                        aria-required="true"
-                        value={values.firstName}
-                        onChange={handleChange}
-                        placeholder="First Name"
-                        onBlur={handleBlur}
-                        className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.firstName && touched.firstName ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
-                      />
-                      {touched.firstName && errors.firstName && (
-                        <div className="absolute left-4 text-sm font-light text-red-500">
-                          {" "}
-                          {errors.firstName}{" "}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="relative mb-6 w-full">
-                      <input
-                        name="lastName"
-                        aria-label="Last Name"
-                        aria-required="true"
-                        value={values.lastName}
-                        onChange={handleChange}
-                        placeholder="Last Name"
-                        onBlur={handleBlur}
-                        className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.lastName && touched.lastName ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
-                      />
-                      {touched.lastName && errors.lastName && (
-                        <div className="absolute left-4 text-sm font-light text-red-500">
-                          {" "}
-                          {errors.lastName}{" "}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
+            {isRegister && (
+              <>
+                <div className="md:flex md:gap-6">
                   <div className="relative mb-6 w-full">
                     <input
-                      name="location"
-                      aria-label="Location"
+                      name="firstName"
+                      aria-label="First Name"
                       aria-required="true"
-                      value={values.location}
+                      value={values.firstName}
                       onChange={handleChange}
-                      placeholder="Location"
+                      placeholder="First Name"
                       onBlur={handleBlur}
-                      className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.location && touched.location ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
+                      className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.firstName && touched.firstName ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
                     />
-                    {touched.location && errors.location && (
+                    {touched.firstName && errors.firstName && (
                       <div className="absolute left-4 text-sm font-light text-red-500">
                         {" "}
-                        {errors.location}{" "}
+                        {errors.firstName}{" "}
                       </div>
                     )}
                   </div>
 
                   <div className="relative mb-6 w-full">
                     <input
-                      name="occupation"
-                      aria-label="Occupation"
+                      name="lastName"
+                      aria-label="Last Name"
                       aria-required="true"
-                      value={values.occupation}
+                      value={values.lastName}
                       onChange={handleChange}
-                      placeholder="Occupation"
+                      placeholder="Last Name"
                       onBlur={handleBlur}
-                      className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.occupation && touched.occupation ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
+                      className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.lastName && touched.lastName ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
                     />
-                    {touched.occupation && errors.occupation && (
+                    {touched.lastName && errors.lastName && (
                       <div className="absolute left-4 text-sm font-light text-red-500">
                         {" "}
-                        {errors.occupation}{" "}
+                        {errors.lastName}{" "}
                       </div>
                     )}
                   </div>
-                </>
-              )}
-            </div>
+                </div>
+
+                <div className="relative mb-6 w-full">
+                  <input
+                    name="location"
+                    aria-label="Location"
+                    aria-required="true"
+                    value={values.location}
+                    onChange={handleChange}
+                    placeholder="Location"
+                    onBlur={handleBlur}
+                    className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.location && touched.location ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
+                  />
+                  {touched.location && errors.location && (
+                    <div className="absolute left-4 text-sm font-light text-red-500">
+                      {" "}
+                      {errors.location}{" "}
+                    </div>
+                  )}
+                </div>
+
+                <div className="relative mb-6 w-full">
+                  <input
+                    name="occupation"
+                    aria-label="Occupation"
+                    aria-required="true"
+                    value={values.occupation}
+                    onChange={handleChange}
+                    placeholder="Occupation"
+                    onBlur={handleBlur}
+                    className={`w-full rounded-[6px] border-[2px] bg-transparent p-4 text-base text-black outline-2 -outline-offset-2 transition-all duration-100  focus-within:border-transparent focus-within:outline  dark:text-gray-400 dark:hover:border-gray-400 ${errors.occupation && touched.occupation ? " border-red-500 outline-red-500 hover:border-red-600 dark:hover:border-red-600" : "border-gray-400 outline-cyan-500 hover:border-gray-900 focus-within:hover:border-transparent"}`}
+                  />
+                  {touched.occupation && errors.occupation && (
+                    <div className="absolute left-4 text-sm font-light text-red-500">
+                      {errors.occupation}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
 
             <div className="md:flex md:gap-3">
               {isRegister && (
@@ -304,9 +311,16 @@ const Form = () => {
             <div className="w-full">
               <button
                 type="submit"
-                className="my-8 block w-full rounded-lg bg-cyan-500 py-4 text-white hover:bg-cyan-400"
+                disabled={disable}
+                className="my-8 flex w-full items-center justify-center rounded-lg bg-cyan-500 py-4 text-white hover:bg-cyan-400"
               >
-                {isLogin ? "LOGIN" : "REGISTER"}
+                {disable ? (
+                  <span className="loaderSpin animate-spinnerSpin"></span>
+                ) : isLogin ? (
+                  "LOGIN"
+                ) : (
+                  "REGISTER"
+                )}
               </button>
               <p
                 onClick={() => {

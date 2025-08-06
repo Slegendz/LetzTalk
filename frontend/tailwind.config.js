@@ -39,7 +39,10 @@ export default {
           1000: "#000000",
         },
       },
-      backgroundImage: {},
+      backgroundImage: {
+        'chatBackLight': "linear-gradient(rgba(230, 230, 230, 0.6), rgba(225, 225, 225, 0.6)), url('../src/assets/Img/chatBackLight.jpg')",
+        'chatBackDark': "linear-gradient(rgba(9, 9, 9, 0.6), rgba(4, 4, 4, 0.6)), url('../src/assets/Img/chatBackDark.jpg')",
+      },
       animation: {
         catBoom: "boom 4s ease-in-out forwards 3s",
         spinnerSpin: "rotation 1s linear infinite",

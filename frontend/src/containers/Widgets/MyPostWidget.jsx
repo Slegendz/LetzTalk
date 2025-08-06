@@ -48,13 +48,13 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
     }
 
     if (!isProfile) {
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/posts`, {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/posts/create`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
       })
-      const posts = await response.json()
-      dispatch(setPosts({ posts }))
+      const data = await response.json()
+      dispatch(setPosts({ posts: [data, ...posts] }))
     } else {
       const response = await fetch(
         `${process.env.REACT_APP_BASE_URL}/posts/profile`,

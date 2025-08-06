@@ -14,6 +14,7 @@ import conversationRoutes from "./routes/conversation.js";
 import { Server } from "socket.io";
 import multer from "multer";
 import cookieParser from "cookie-parser";
+import User from "./models/user.model.js";
 
 // Used to properly set the path when we configure directories
 import path from "path";
@@ -85,7 +86,7 @@ app.post(
   register
 ); // Name of the fields which we want to upload
 app.post(
-  "/posts",
+  "/posts/create",
   verifyJWT,
   upload.fields([{ name: "picture" }, { name: "audio" }, { name: "clip" }]),
   createPost
@@ -119,6 +120,7 @@ const io = new Server(expressServer, {
   cors: {
     // origin: "https://letztalkchat.netlify.app",
     origin: "*",
+    credentials: true,
   },
 });
 
@@ -140,6 +142,11 @@ const getUsers = (userId) => {
   return findUser;
 };
 
+const getUserBySocket = (socketId) => {
+  const findUser = users.find((user) => user.socketId === socketId);
+  return findUser?.userId;
+};
+
 io.on("connection", (socket) => {
   console.log(`User ${socket.id} connected`);
 
@@ -149,12 +156,11 @@ io.on("connection", (socket) => {
     io.emit("getUsers", users);
   });
 
-  socket.on("activity", (receiverId) => {
+  socket.on("activity", ({ receiverId, senderId }) => {
     const user = getUsers(receiverId);
-    console.log(user);
 
     if (user) {
-      io.to(user.socketId).emit("userActivity");
+      io.to(user.socketId).emit("userActivity", { senderId });
     }
   });
 
@@ -170,14 +176,29 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("logout", () => {
+  socket.on("logout", async () => {
+    const userId = getUserBySocket(socket.id);
+    if (userId) {
+      await User.findByIdAndUpdate(userId, {
+        lastOnline: new Date().toISOString(),
+      });
+    }
+
     removeUser(socket.id);
+    io.emit("refresh");
     io.emit("getUsers", users);
   });
 
-  socket.on("disconnect", () => {
-    console.log("a user disconnected!");
+  socket.on("disconnect", async () => {
+    const userId = getUserBySocket(socket.id);
+    if (userId) {
+      await User.findByIdAndUpdate(userId, {
+        lastOnline: new Date().toISOString(),
+      });
+    }
+
     removeUser(socket.id);
+    io.emit("refresh");
     io.emit("getUsers", users);
   });
 });

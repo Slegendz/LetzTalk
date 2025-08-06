@@ -14,7 +14,7 @@ var _fileUpload = _interopRequireDefault(require("../utils/fileUpload.js"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 var createUserPost = function createUserPost(req, res) {
-  var _req$body, userId, description, _req$files, picture, clip, audio, user, picturePath, audioPath, clipPath, newPost, posts;
+  var _req$body, userId, description, _req$files, picture, clip, audio, user, picturePath, audioPath, clipPath, newPost;
 
   return regeneratorRuntime.async(function createUserPost$(_context) {
     while (1) {
@@ -29,118 +29,102 @@ var createUserPost = function createUserPost(req, res) {
         case 5:
           user = _context.sent;
 
-          if (!user) {
-            res.status(404).json({
-              message: "User not found "
-            });
-          }
-
-          if (!picture) {
-            _context.next = 13;
+          if (user) {
+            _context.next = 8;
             break;
           }
 
-          _context.next = 10;
+          return _context.abrupt("return", res.status(404).json({
+            message: "User not found "
+          }));
+
+        case 8:
+          if (!picture) {
+            _context.next = 14;
+            break;
+          }
+
+          _context.next = 11;
           return regeneratorRuntime.awrap((0, _fileUpload["default"])(picture[0].path));
 
-        case 10:
+        case 11:
           _context.t0 = _context.sent;
-          _context.next = 14;
+          _context.next = 15;
           break;
 
-        case 13:
+        case 14:
           _context.t0 = "";
 
-        case 14:
+        case 15:
           picturePath = _context.t0;
 
           if (!audio) {
-            _context.next = 21;
+            _context.next = 22;
             break;
           }
 
-          _context.next = 18;
+          _context.next = 19;
           return regeneratorRuntime.awrap((0, _fileUpload["default"])(audio[0].path));
 
-        case 18:
+        case 19:
           _context.t1 = _context.sent;
-          _context.next = 22;
+          _context.next = 23;
           break;
 
-        case 21:
+        case 22:
           _context.t1 = "";
 
-        case 22:
+        case 23:
           audioPath = _context.t1;
 
           if (!clip) {
-            _context.next = 29;
+            _context.next = 30;
             break;
           }
 
-          _context.next = 26;
+          _context.next = 27;
           return regeneratorRuntime.awrap((0, _fileUpload["default"])(clip[0].path));
 
-        case 26:
+        case 27:
           _context.t2 = _context.sent;
-          _context.next = 30;
+          _context.next = 31;
           break;
 
-        case 29:
+        case 30:
           _context.t2 = "";
 
-        case 30:
+        case 31:
           clipPath = _context.t2;
-          _context.next = 33;
+          _context.next = 34;
           return regeneratorRuntime.awrap(_postsModel["default"].create({
             userId: userId,
-            firstName: user.firstName,
-            lastName: user.lastName,
             description: description,
             picturePath: picturePath,
             audioPath: audioPath,
             clipPath: clipPath,
-            userPicturePath: user.picturePath,
-            location: user.location,
             likes: {},
             comments: []
           }));
 
-        case 33:
+        case 34:
           newPost = _context.sent;
-          _context.next = 36;
-          return regeneratorRuntime.awrap(newPost.save());
-
-        case 36:
-          _context.next = 38;
-          return regeneratorRuntime.awrap(_postsModel["default"].find({
-            userId: userId
-          }).sort({
-            createdAt: -1
-          }));
-
-        case 38:
-          posts = _context.sent;
-          res.status(200).json({
-            posts: posts,
-            newPost: newPost
-          });
-          _context.next = 45;
+          res.status(200).json(newPost);
+          _context.next = 41;
           break;
 
-        case 42:
-          _context.prev = 42;
+        case 38:
+          _context.prev = 38;
           _context.t3 = _context["catch"](0);
           res.status(500).json({
             message: _context.t3.message
           });
 
-        case 45:
+        case 41:
         case "end":
           return _context.stop();
       }
     }
-  }, null, null, [[0, 42]]);
+  }, null, null, [[0, 38]]);
 };
 
 exports.createUserPost = createUserPost;

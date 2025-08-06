@@ -1,5 +1,5 @@
-import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "../redux/authSlice";
+import { configureStore } from "@reduxjs/toolkit"
+import authReducer from "../redux/authSlice"
 import {
   persistReducer,
   FLUSH,
@@ -8,13 +8,18 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
-} from "redux-persist";
-import storage from "redux-persist/lib/storage";
+} from "redux-persist"
+import storage from "redux-persist/lib/storage"
 
 // Redux-persist is used to save information locally even if the user remove the tab. It will clear only when the user clears the cache.
 
-const persistConfig = { key: "root", storage, version: 1 };
-const persistedReducer = persistReducer(persistConfig, authReducer);
+const persistConfig = {
+  key: "root",
+  storage,
+  version: 1,
+  whitelist: ["user", "token"],
+}
+const persistedReducer = persistReducer(persistConfig, authReducer)
 
 export const store = configureStore({
   reducer: persistedReducer,
@@ -24,4 +29,4 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, REGISTER, PAUSE, PERSIST, PURGE],
       },
     }),
-});
+})

@@ -7,7 +7,7 @@ const UserImage = ({ image, width, height }) => {
     <LazyLoadImage
       width={width}
       height={height}
-      className="rounded-full object-cover object-center"
+      className={`rounded-full w-[${width}px] h-[${height}px] object-cover object-center`}
       alt="user"
       // src={`${process.env.REACT_APP_BASE_URL}/assets/${image}`}
       src={image}

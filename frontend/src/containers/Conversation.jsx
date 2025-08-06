@@ -1,16 +1,16 @@
 import { formatDistanceToNowStrict } from "date-fns"
 import { useEffect } from "react"
-import { useSelector } from "react-redux"
 import UserImage from "../assets/Img/github.gif"
 import React from "react"
+import { useSelector } from "react-redux"
 
-export default function Conversation({
+const Conversation = ({
   friend,
   setMessages,
   isBot = false,
   setCurrentChat,
   conversations,
-}) {
+}) => {
   const onlineUsers = useSelector((state) => state.onlineUsers)
   const token = useSelector((state) => state.token)
 
@@ -50,10 +50,8 @@ export default function Conversation({
       <div className="relative h-[50px] w-[50px] xs:h-[55px] xs:w-[55px]">
         <img
           src={
-            isBot
-              ? UserImage
-              : friend?.picturePath
-              // : `${process.env.REACT_APP_BASE_URL}/assets/${friend?.picturePath}`
+            isBot ? UserImage : friend?.picturePath
+            // : `${process.env.REACT_APP_BASE_URL}/assets/${friend?.picturePath}`
           }
           className="h-full w-full rounded-full object-cover object-center"
           alt="FriendPic"
@@ -83,3 +81,5 @@ export default function Conversation({
     </div>
   )
 }
+
+export default Conversation;

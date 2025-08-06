@@ -13,8 +13,8 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const token = useSelector((state) => state.token)
   const friends = useSelector((state) => state.user.friends)
   const user = useSelector((state) => state.user)
-
-  let isFriend = friends.find((friend) => friend._id === friendId)
+  
+  let isFriend = friends?.find((friend) => friend._id === friendId)
 
   const patchFriend = async () => {
     const response = await fetch(

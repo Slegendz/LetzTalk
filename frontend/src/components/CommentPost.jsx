@@ -77,7 +77,7 @@ const CommentPost = ({ comments, isComments, postId}) => {
                   <div className="flex flex-1 flex-col items-start justify-start">
                     <div className="flex items-center">
                       <p className="font-bold">
-                        {user.firstName + user.lastName}
+                        {user.firstName + " " + user.lastName}
                       </p>
                       <GoDotFill className="p-1 text-sm text-gray-500" />
                       <p className="text-[10px] text-gray-500"> {time} </p>

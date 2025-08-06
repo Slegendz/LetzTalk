@@ -39,7 +39,7 @@ const useUserActiveStatus = () => {
             const onlineUserIds = users.map((user) => user.userId)
 
             const onlineFriends = user.friends
-              .filter((f) => onlineUserIds.includes(f._id))
+              ?.filter((f) => onlineUserIds.includes(f._id))
               .map((f) => f._id)
 
             dispatch(setOnlineUsers(onlineFriends))

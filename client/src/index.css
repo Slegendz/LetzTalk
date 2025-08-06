@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
 
 @font-face {
   font-family: "Boomster";
@@ -12,13 +12,22 @@
 
 
 @layer components {
+  .loaderSpin {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 3px solid #FFF;
+    border-right: 3px solid transparent;
+    box-sizing: border-box;
+  }
 
   .wrapWord {
     /* word-break: break; */
     word-break: break-word;
     white-space: normal;
   }
-
+  
   .borderSup {
     border: 10px;
     background-color: brown;
@@ -33,4 +42,8 @@
     padding-right: min(280px, 15%);
     padding-left: min(280px, 15%);
   }
+
+  .hideScroll::-webkit-scrollbar {
+      display: none;
+  }  
 }

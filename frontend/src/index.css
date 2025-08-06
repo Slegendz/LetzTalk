@@ -42,4 +42,8 @@
     padding-right: min(280px, 15%);
     padding-left: min(280px, 15%);
   }
+
+  .hideScroll::-webkit-scrollbar {
+      display: none;
+  }  
 }

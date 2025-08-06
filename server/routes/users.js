@@ -14,4 +14,5 @@ router.get("/:id/friends", verifyJWT, getUserFriends);
 
 /* Update the friend or remove them */
 router.patch("/:id/:friendId", verifyJWT, addRemoveFriends);
+
 export default router;

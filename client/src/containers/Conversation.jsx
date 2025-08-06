@@ -1,41 +1,54 @@
 import { formatDistanceToNowStrict } from "date-fns"
 import { useEffect } from "react"
-import { useSelector } from "react-redux"
 import UserImage from "../assets/Img/github.gif"
 import React from "react"
+import { setUserMessages } from "../redux/authSlice.jsx"
+import { useSelector, useDispatch } from "react-redux"
 
-export default function Conversation({
+const Conversation = ({
   friend,
   setMessages,
   isBot = false,
   setCurrentChat,
   conversations,
-}) {
+}) => {
   const onlineUsers = useSelector((state) => state.onlineUsers)
   const token = useSelector((state) => state.token)
 
-  let timeStamp
-  if (!isBot) {
-    timeStamp = formatDistanceToNowStrict(friend?.lastOnline)
+  const dispatch = useDispatch()
+  const userMessage = useSelector((state) => state.messages)
+
+  let timeStamp = ""
+  if (friend?.lastOnline && !isBot) {
+    timeStamp = formatDistanceToNowStrict(friend.lastOnline)
   }
 
   useEffect(() => {
     const getMessages = async () => {
       try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BASE_URL}/messages/${conversations._id}`,
-          {
-            method: "GET",
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        )
-        const data = await response.json()
+        if (!userMessage[conversations._id]) {
+          const response = await fetch(
+            `${import.meta.env.VITE_BASE_URL}/messages/${conversations._id}`,
+            {
+              method: "GET",
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          )
+          const data = await response.json()
 
-        if (response.ok) {
-          setMessages(data)
+          if (response.ok) {
+            setMessages(data)
+            setCurrentChat(conversations)
+            dispatch(
+              setUserMessages({
+                ...userMessage,
+                [conversations._id]: data,
+              })
+            )
+          }
+        } else {
+          setMessages(userMessage[conversations._id])
           setCurrentChat(conversations)
-          console.log("Setting conversation of the bot inside Conversation")
-          console.log(conversations)
         }
       } catch (err) {
         console.log(err)
@@ -52,9 +65,8 @@ export default function Conversation({
       <div className="relative h-[50px] w-[50px] xs:h-[55px] xs:w-[55px]">
         <img
           src={
-            isBot
-              ? UserImage
-              : `${import.meta.env.VITE_BASE_URL}/assets/${friend?.picturePath}`
+            isBot ? UserImage : friend?.picturePath
+            // : `${import.meta.env.VITE_BASE_URL}/assets/${friend?.picturePath}`
           }
           className="h-full w-full rounded-full object-cover object-center"
           alt="FriendPic"
@@ -84,3 +96,5 @@ export default function Conversation({
     </div>
   )
 }
+
+export default Conversation;

@@ -8,7 +8,6 @@ const initialState = {
   posts: [],
   onlineUsers: [],
   profilePosts: [],
-  homePage: 1,
 }
 
 export const authSlice = createSlice({
@@ -48,9 +47,6 @@ export const authSlice = createSlice({
     setProfilePosts: (state, action) => {
       state.profilePosts = action.payload.profilePosts
     },
-    setHomePage: (state) => {
-      state.homePage = state.homePage + 1
-    },
     setPost: (state, action) => {
       const updatedPosts = state.posts.map((post) => {
         if (post._id === action.payload.post._id) return action.payload.post
@@ -74,7 +70,6 @@ export const {
   setOnlineUsers,
   setUserPic,
   setProfilePosts,
-  setHomePage,
   setUserDetails,
 } = authSlice.actions
 

@@ -9,7 +9,7 @@ const createUserPost = async (req, res) => {
 
     const user = await User.findById(userId);
     if (!user) {
-      res.status(404).json({ message: "User not found " });
+      return res.status(400).json({ message: "User not found " });
     }
 
     const picturePath = picture
@@ -31,7 +31,6 @@ const createUserPost = async (req, res) => {
       likes: {},
       comments: [],
     });
-    await newPost.save();
 
     const posts = await Post.find({ userId }).sort({ createdAt: -1 });
     res.status(200).json({ posts, newPost });
@@ -43,11 +42,11 @@ const createUserPost = async (req, res) => {
 const createPost = async (req, res) => {
   try {
     const { userId, description } = req.body;
-    const user = await User.findById(userId);
     const { picture, clip, audio } = req.files;
-
+    
+    const user = await User.findById(userId);
     if (!user) {
-      res.status(404).json({ message: "User not found " });
+      return res.status(400).json({ message: "User not found " });
     }
 
     const picturePath = picture
@@ -69,10 +68,9 @@ const createPost = async (req, res) => {
       likes: {},
       comments: [],
     });
-    await newPost.save();
 
-    const posts = await Post.find().sort({ createdAt: -1 });
-    res.status(201).json({ posts, newPost }); // Created something
+    // const posts = await Post.find().sort({ createdAt: -1 });
+    res.status(201).json(newPost); // Created something
   } catch (err) {
     res.status(409).json({ message: err.message }); // Error while creating
   }

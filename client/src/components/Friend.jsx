@@ -4,20 +4,20 @@ import UserImage from "./UserImage"
 import { FaUserPlus } from "react-icons/fa6"
 import { FaUserMinus } from "react-icons/fa"
 import React from "react"
+import { Link } from "react-router-dom"
 
 const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const dispatch = useDispatch()
 
-  const { _id } = useSelector((state) => state.user)
+  const { id } = useSelector((state) => state.user)
   const token = useSelector((state) => state.token)
   const friends = useSelector((state) => state.user.friends)
-  const user = useSelector((state) => state.user)
 
-  let isFriend = friends.find((friend) => friend._id === friendId)
+  let isFriend = friends?.find((friend) => friend._id === friendId)
 
   const patchFriend = async () => {
     const response = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/users/${_id}/${friendId}`,
+      `${import.meta.env.VITE_BASE_URL}/users/${id}/${friendId}`,
       {
         method: "PATCH",
         headers: {
@@ -33,19 +33,24 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   return (
     <div className="flex items-center justify-between text-gray-700 dark:text-gray-300">
       <div className="flex gap-4">
-        <UserImage userId = {friendId} image={userPicturePath} />
+        <UserImage width = {50} height = {50} image={userPicturePath} />
         <div>
-          <a
-            href={`${import.meta.env.VITE_BASE_URL}/profile/${friendId}`}
+          {/* <a href={`${import.meta.env.VITE_BASE_URL}/users/${friendId}`}>
+            {name}
+          </a> */}
+
+          <Link
+            to={`/profile/${friendId}`}
             className="cursor-pointer text-xl hover:text-blue-400"
           >
-            {name}
-          </a>
+            {" "}
+            {name}{" "}
+          </Link>
           <p className="text-sm"> {subtitle} </p>
         </div>
       </div>
 
-      {friendId !== user._id && (
+      {friendId !== id && (
         <div
           onClick={() => patchFriend()}
           className="flex cursor-pointer items-center justify-center rounded-full bg-blue-400 p-3 text-white"

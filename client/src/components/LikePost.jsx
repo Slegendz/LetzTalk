@@ -16,17 +16,19 @@ const LikePost = ({ likes, postId }) => {
     setIsLiked(likes[loggedInUserId])
   }, [loggedInUserId, likes])
 
-  
   // Add or Remove Like functionality
   const patchLike = async () => {
-    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/posts/${postId}/like`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId: loggedInUserId }),
-    })
+    const response = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/posts/${postId}/like`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: loggedInUserId }),
+      }
+    )
     const updatedPost = await response.json()
     setLikeCount(isLiked ? likeCount - 1 : likeCount + 1)
     setIsLiked(!isLiked)

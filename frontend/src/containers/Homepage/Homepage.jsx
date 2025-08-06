@@ -1,14 +1,14 @@
 import { useSelector } from "react-redux"
 import Navbar from "../Navbar/Navbar.jsx"
 import UserWidget from "../Widgets/UserWidget.jsx"
-import MyPostWidget from "../Widgets/MyPostWidget"
-import PostsWidget from "../Widgets/PostsWidget"
+import MyPostWidget from "../Widgets/MyPostWidget.jsx"
+import PostsWidget from "../Widgets/PostsWidget.jsx"
 import AdvertWidget from "../Widgets/AdWidget.jsx"
-import FriendListWidget from "../Widgets/FriendWidget"
+import FriendListWidget from "../Widgets/FriendWidget.jsx"
 import React from "react"
 
 const HomePage = ({ logoutUser }) => {
-  const { _id, picturePath } = useSelector((state) => state.user)
+  const { _id, picturePath, friends } = useSelector((state) => state.user)
 
   return (
     <div className="flex w-full flex-col items-center bg-zinc-100 text-gray-700 dark:bg-[#121212] dark:text-gray-300">
@@ -24,7 +24,7 @@ const HomePage = ({ logoutUser }) => {
         </div>
         <div className="hidden lg:block lg:col-span-2">
           <AdvertWidget />
-          <FriendListWidget userId={_id} />
+          <FriendListWidget userId={_id} friends = {friends} />
         </div>
       </div>
     </div>

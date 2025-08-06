@@ -1,26 +1,28 @@
 import React, { useEffect, useRef, useState } from "react"
-import { useSelector, useDispatch } from "react-redux"
+import { useSelector } from "react-redux"
 import Conversation from "./Conversation"
 import Sidebar from "../components/Sidebar"
 import { AiOutlineMessage } from "react-icons/ai"
 import { socket } from "../utils/SocketConn.js"
 import ChatTopbar from "./ChatTopbar.jsx"
 import { useAutosizeTextArea } from "../hooks/useAutosizeTextArea.js"
-import { setFriends } from "../redux/authSlice.jsx"
 import EmojiModal from "../components/EmojiModal.jsx"
 import Message from "./Message.jsx"
 import TypingMessage from "./TypingMessage.jsx"
+import { GoogleGenerativeAI } from "@google/generative-ai"
 
-export default function Messenger({ logoutUser, windowSize }) {
+const Messenger = ({ logoutUser, windowSize }) => {
   const [conversations, setConversations] = useState(null)
   const [currentChat, setCurrentChat] = useState(null)
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState("")
   const [arrivalMessage, setArrivalMessage] = useState(null)
   const [currFriend, setCurrFriend] = useState([])
+  const [prevUser, setPrevUser] = useState(false)
 
   const [isTyping, setIsTyping] = useState(false)
 
+  const mode = useSelector((state) => state.mode)
   const user = useSelector((state) => state.user)
   const friends = useSelector((state) => state.user.friends)
   const token = useSelector((state) => state.token)
@@ -31,12 +33,11 @@ export default function Messenger({ logoutUser, windowSize }) {
   const [botReplyMsg, setBotReplyMsg] = useState(false)
 
   const scrollRef = useRef()
-  const typingScrollRef = useRef()
-  const dispatch = useDispatch()
   const textAreaRef = useRef()
 
-  const LANGUAGE_MODEL_API_KEY = import.meta.env.VITE_LANGUAGE_MODEL_KEY
-  const LANGUAGE_MODEL_URL = `https://generativelanguage.googleapis.com/v1beta1/models/chat-bison-001:generateMessage?key=${LANGUAGE_MODEL_API_KEY}`
+  const genAI = new GoogleGenerativeAI(import.meta.env.VITE_LANGUAGE_MODEL_KEY)
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
+
   const botId = import.meta.env.VITE_BOT_ID
 
   useAutosizeTextArea(textAreaRef.current, newMessage)
@@ -63,7 +64,7 @@ export default function Messenger({ logoutUser, windowSize }) {
 
   useEffect(() => {
     const handleKeyPress = (e) => {
-      if (e.keyCode == 13 && !e.shiftKey) {
+      if (e.keyCode === 13 && !e.shiftKey) {
         handleSubmit(e)
       }
     }
@@ -95,44 +96,34 @@ export default function Messenger({ logoutUser, windowSize }) {
       if (newMessage !== "") {
         setBotReplyMsg(true)
 
-        const payload = {
-          prompt: { messages: [{ content: newMessage }] },
-          temperature: 0.1,
-          candidate_count: 1,
-        }
+        const payload = newMessage
         setNewMessage("")
 
         try {
-          const response = await fetch(LANGUAGE_MODEL_URL, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-            method: "POST",
-          })
-          const data = await response.json()
+          const result = await model.generateContent(payload)
 
           const message = {
             conversationId: conversations,
             senderId: botId,
-            text: data.candidates[0].content,
+            text: result.response.text(),
             createdAt: new Date(),
           }
 
-          if (response.ok) {
-            setMessages([...messages, message])
-            setBotReplyMsg(false)
-          }
+          setMessages([...messages, message])
+          setBotReplyMsg(false)
 
           try {
-            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/messages`, {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(message),
-            })
+            const response = await fetch(
+              `${import.meta.env.VITE_BASE_URL}/messages`,
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(message),
+              }
+            )
 
             if (!response.ok) {
               setMessages(messages)
@@ -169,14 +160,17 @@ export default function Messenger({ logoutUser, windowSize }) {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/messages`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(message),
-      })
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/messages`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(message),
+        }
+      )
       const data = await response.json()
 
       if (response.ok) {
@@ -195,21 +189,15 @@ export default function Messenger({ logoutUser, windowSize }) {
 
   const getFriendConversation = async (friend, isBot) => {
     try {
-      const response = isBot
-        ? await fetch(
-            `${import.meta.env.VITE_BASE_URL}/conversations/find/${user._id}/${botId}`,
-            {
-              method: "GET",
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          )
-        : await fetch(
-            `${import.meta.env.VITE_BASE_URL}/conversations/find/${user._id}/${friend._id}`,
-            {
-              method: "GET",
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          )
+      const friendId = isBot ? botId : friend._id
+
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/conversations/find/${user._id}/${friendId}`,
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
 
       const data = await response.json()
       setConversations(data)
@@ -230,7 +218,10 @@ export default function Messenger({ logoutUser, windowSize }) {
   }, [messages, isTyping, botReplyMsg])
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-white text-gray-700 dark:bg-black dark:text-gray-300">
+    <div
+      className={`flex w-full overflow-hidden bg-white text-gray-700 dark:bg-black dark:text-gray-300`}
+      style={{ height: `${windowSize.height}px` }}
+    >
       <Sidebar logoutUser={logoutUser} _id={_id} picturePath={picturePath} />
 
       <div className="mb-[60px] flex flex-1 bg-zinc-100 md:mb-0 md:ml-[70px] dark:bg-black">
@@ -244,7 +235,7 @@ export default function Messenger({ logoutUser, windowSize }) {
             />
           </div>
 
-          <div className="h-full w-full overflow-auto ">
+          <div className="h-full w-full overflow-auto">
             <div
               onClick={() => {
                 getFriendConversation(currFriend, true)
@@ -258,21 +249,22 @@ export default function Messenger({ logoutUser, windowSize }) {
               />
             </div>
 
-            {friends.map((friend, idx) => (
-              <div
-                key={idx}
-                onClick={() => {
-                  getFriendConversation(friend, false)
-                }}
-              >
-                <Conversation
-                  conversations={conversations}
-                  setCurrentChat={setCurrentChat}
-                  setMessages={setMessages}
-                  friend={friend}
-                />
-              </div>
-            ))}
+            {friends?.length > 0 &&
+              friends.map((friend, idx) => (
+                <span
+                  key={idx}
+                  onClick={() => {
+                    getFriendConversation(friend, false)
+                  }}
+                >
+                  <Conversation
+                    conversations={conversations}
+                    setCurrentChat={setCurrentChat}
+                    setMessages={setMessages}
+                    friend={friend}
+                  />
+                </span>
+              ))}
           </div>
         </div>
 
@@ -283,13 +275,17 @@ export default function Messenger({ logoutUser, windowSize }) {
                 <ChatTopbar currFriend={currFriend} isBot={botConversation} />
               </div>
 
-              <div className="flex h-0 flex-grow flex-col overflow-auto p-2 xs:p-4">
+              <div
+                className={`flex h-0 flex-grow flex-col overflow-auto ${mode === "dark" ? "bg-chatBackDark" : "bg-chatBackLight"} bg-contain p-2 xs:p-4`}
+              >
                 {messages.map((m, idx) => (
                   <div key={idx} ref={scrollRef}>
                     <Message
                       own={m.senderId === user._id}
                       message={m}
                       user={user}
+                      prevUser={prevUser}
+                      setPrevUser={setPrevUser}
                       currFriend={currFriend}
                       isBot={botConversation}
                     />
@@ -308,7 +304,7 @@ export default function Messenger({ logoutUser, windowSize }) {
                 )}
               </div>
 
-              <div className="relative m-2 flex min-h-[50px] items-center gap-2 rounded-[25px] border border-r-2 border-gray-400 px-2 sm:m-4 sm:px-4">
+              <div className="relative flex min-h-[50px] items-center gap-2 border-t border-gray-500 border-opacity-40 px-2 py-2 sm:px-4 sm:py-3">
                 <EmojiModal
                   windowSize={windowSize}
                   newMessage={newMessage}
@@ -344,3 +340,5 @@ export default function Messenger({ logoutUser, windowSize }) {
     </div>
   )
 }
+
+export default Messenger

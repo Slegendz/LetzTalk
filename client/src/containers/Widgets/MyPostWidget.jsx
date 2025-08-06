@@ -1,7 +1,7 @@
 import UserImage from "../../components/UserImage"
 import { useState, useRef, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { setPosts } from "../../redux/authSlice"
+import { setPosts, setProfilePosts } from "../../redux/authSlice"
 import { FaRegImage } from "react-icons/fa6"
 import { MdAudiotrack } from "react-icons/md"
 import { FaPaperclip } from "react-icons/fa"
@@ -12,6 +12,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
   const [isImage, setIsImage] = useState(false)
   const [isClip, setIsClip] = useState(false)
   const [isAudio, setIsAudio] = useState(false)
+  const [disable, setDisable] = useState(false)
 
   const [image, setImage] = useState(null)
   const [clip, setClip] = useState(null)
@@ -20,6 +21,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
   const [post, setPost] = useState("")
   const { _id } = useSelector((state) => state.user)
   const token = useSelector((state) => state.token)
+  const posts = useSelector((state) => state.posts)
 
   const myPostRef = useRef()
 
@@ -28,19 +30,21 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
     formData.append("userId", _id)
     formData.append("description", post)
 
+    setDisable(true)
+
     if (image) {
       formData.append("picture", image)
-      formData.append("picturePath", image.name)
+      // formData.append("picturePath", image.name)
     }
 
     if (clip) {
       formData.append("clip", clip)
-      formData.append("clipPath", clip.name)
+      // formData.append("clipPath", clip.name)
     }
 
     if (audio) {
       formData.append("audio", audio)
-      formData.append("audioPath", audio.name)
+      // formData.append("audioPath", audio.name)
     }
 
     if (!isProfile) {
@@ -52,13 +56,17 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
       const posts = await response.json()
       dispatch(setPosts({ posts }))
     } else {
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/posts/profile`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
-      })
-      const posts = await response.json()
-      dispatch(setPosts({ posts }))
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/posts/profile`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        }
+      )
+      const data = await response.json()
+      dispatch(setProfilePosts({ profilePosts: data.posts }))
+      dispatch(setPosts({ posts: [data.newPost, ...posts] }))
     }
 
     setImage(null)
@@ -66,10 +74,10 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
 
     setClip(null)
     setIsClip(false)
-    
+
     setAudio(null)
     setIsAudio(false)
-
+    setDisable(false)
     setPost("")
   }
 
@@ -93,7 +101,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
     >
       <div className="flex items-center gap-4">
         <div className="hidden xss:block">
-          <UserImage image={picturePath} />
+          <UserImage image={picturePath} width = {50} height = {50} />
         </div>
         <input
           className="overflow-none flex w-full flex-1 resize-none rounded-3xl bg-gray-100 p-3 px-4 text-gray-700 outline-none"
@@ -120,7 +128,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
                 setImage(e.target.files[0])
               }}
             />
-            <span className="flex w-full md:items-center md:justify-center">
+            <span className="wrapWord flex w-full md:items-center md:justify-center">
               {!image
                 ? "Upload a file ( PNG, JPG, GIF )"
                 : image.name.length > 40
@@ -147,7 +155,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
                 setAudio(e.target.files[0])
               }}
             />
-            <span className="flex w-full md:items-center md:justify-center">
+            <span className="wrapWord flex w-full md:items-center md:justify-center">
               {!audio
                 ? "Upload a file ( Mp3, Audio File)"
                 : audio.name.length > 40
@@ -174,7 +182,7 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
                 setClip(e.target.files[0])
               }}
             />
-            <span className="flex w-full md:items-center md:justify-center">
+            <span className="wrapWord flex w-full md:items-center md:justify-center">
               {!clip
                 ? "Upload a file ( MP4, mkv )"
                 : clip.name.length > 40
@@ -197,7 +205,12 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
           }}
         >
           <FaRegImage />
-          <p className="cursor-pointer hover:text-blue-400"> Image </p>
+          <p
+            className={`${isImage ? "text-indigo-400" : ""} cursor-pointer font-bold hover:text-blue-400`}
+          >
+            {" "}
+            Image{" "}
+          </p>
         </div>
 
         <div
@@ -209,7 +222,11 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
           }}
         >
           <FaPaperclip />
-          <p className="cursor-pointer hover:text-blue-400">Clip</p>
+          <p
+            className={`${isClip ? "text-indigo-400" : ""} cursor-pointer font-bold hover:text-blue-400 `}
+          >
+            Clip
+          </p>
         </div>
 
         <div
@@ -221,15 +238,23 @@ const MyPostWidget = ({ picturePath, isProfile = false }) => {
           }}
         >
           <MdAudiotrack />
-          <p className="cursor-pointer hover:text-blue-400">Audio</p>
+          <p
+            className={`${isAudio ? "text-indigo-400" : ""} cursor-pointer font-bold hover:text-blue-400`}
+          >
+            Audio
+          </p>
         </div>
 
         <button
-          disabled={!post}
+          disabled={!post || disable}
           onClick={handlePost}
-          className="rounded-[30px] bg-blue-400 p-2 px-6 text-white hover:bg-blue-300"
+          className="flex w-[100px] items-center justify-center rounded-[30px] bg-blue-400 p-2 px-6 text-white hover:bg-blue-300"
         >
-          Post
+          {disable ? (
+            <span className="loaderSpin animate-spinnerSpin"></span>
+          ) : (
+            "Post"
+          )}
         </button>
       </div>
     </div>

@@ -9,7 +9,8 @@ var _mongoose = _interopRequireDefault(require("mongoose"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var Schema = _mongoose["default"].Schema;
+var Schema = _mongoose["default"].Schema,
+    model = _mongoose["default"].model;
 var userSchema = new Schema({
   firstName: {
     type: String,
@@ -42,18 +43,25 @@ var userSchema = new Schema({
     type: String,
     "default": ""
   },
-  friends: {
-    type: Array,
-    "default": []
-  },
+  friends: [{
+    type: Schema.Types.ObjectId,
+    ref: "User"
+  }],
   lastOnline: {
-    type: String,
-    "default": new Date().toISOString()
+    type: Date,
+    "default": Date.now,
+    index: true
   },
   occupation: String,
   location: String,
-  impressions: Number,
-  viewedProfile: Number,
+  impressions: {
+    type: Number,
+    "default": 0
+  },
+  viewedProfile: {
+    type: Number,
+    "default": 0
+  },
   refreshToken: String,
   twitterUrl: {
     type: String,
@@ -70,8 +78,6 @@ var userSchema = new Schema({
 }, {
   timestamps: true
 });
-
-var User = _mongoose["default"].model('User', userSchema);
-
+var User = model("User", userSchema);
 var _default = User;
 exports["default"] = _default;

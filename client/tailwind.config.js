@@ -1,12 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,jsx}"],
-  darkMode: ['selector', '[data-theme="dark"]'],
+  darkMode: ["selector", '[data-theme="dark"]'],
   theme: {
     fontFamily: {
       Rubik: "Rubik",
       sansSerif: "sans-serif",
       Boomster: "Boomster",
+      Nunito: "Nunito",
     },
     extend: {
       colors: {
@@ -38,27 +39,48 @@ export default {
           1000: "#000000",
         },
       },
-      backgroundImage: {},
+      backgroundImage: {
+        'chatBackLight': "linear-gradient(rgba(230, 230, 230, 0.6), rgba(225, 225, 225, 0.6)), url('../src/assets/Img/chatBackLight.jpg')",
+        'chatBackDark': "linear-gradient(rgba(9, 9, 9, 0.6), rgba(4, 4, 4, 0.6)), url('../src/assets/Img/chatBackDark.jpg')",
+      },
       animation: {
-        'catBoom': 'boom 4s ease-in-out forwards 3s',
+        catBoom: "boom 4s ease-in-out forwards 3s",
+        spinnerSpin: "rotation 1s linear infinite",
+        blurImage: "blurAnim 5s ease-in-out infinite",
       },
       keyframes: {
         boom: {
-          '0%': { transform: 'translate(0%)' },
-          '30%': {transform: 'translate(-500%)' },
-          '50%': { transform: 'translate(-800%)' },
-          '100%': {transform: 'translate(-10000%)'},
-        }
+          "0%": { transform: "translate(0%)" },
+          "30%": { transform: "translate(-500%)" },
+          "50%": { transform: "translate(-800%)" },
+          "100%": { transform: "translate(-10000%)" },
+        },
+        blurAnim: {
+          "0%": { filter: "blur(5px)" },
+          "25%": { filter: "blur(15px)" },
+          "50%": { filter: "blur(25px)" },
+          "75%": { filter: "blur(15px)" },
+          "100%": { filter: "blur(5px)" },
+        },
+        rotation: {
+          "0%": {
+            transform: "rotate(0deg)",
+          },
+          "100%": {
+            transform: "rotate(360deg)",
+            borderTopColor: "gold",
+          },
+        },
       },
       screens: {
-        'xss': '340px',
-        'xs': '480px',
-        'sm': '640px',
-        'md': '768px',
-        'lg': '1024px',
-        'xl': '1280px',
-        '2xl': '1536px',
-      }
+        xss: "340px",
+        xs: "480px",
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1536px",
+      },
     },
   },
   plugins: [],

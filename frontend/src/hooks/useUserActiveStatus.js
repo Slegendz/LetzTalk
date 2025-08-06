@@ -17,18 +17,27 @@ const useUserActiveStatus = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        credentials: 'include'
+        credentials: "include",
       }
     )
 
-    console.log(response)
-    
     if (response.ok) {
       const data = await response.json()
       console.log(data)
-      
+
       socket.emit("logout")
       dispatch(setLogout())
+    }
+  }
+
+  const findOnlineFriends = (users) => {
+    if (users) {
+      const onlineUserIds = users.map((user) => user.userId)
+      const onlineFriends = user.friends
+        ?.filter((f) => onlineUserIds.includes(f._id))
+        .map((f) => f._id)
+
+      dispatch(setOnlineUsers(onlineFriends))
     }
   }
 
@@ -37,20 +46,14 @@ const useUserActiveStatus = () => {
       if (socket) {
         socket.emit("addUser", user._id)
 
-        socket.on("getUsers", (users) => {
-          if (users) {
-            const onlineUserIds = users.map((user) => user.userId)
-
-            const onlineFriends = user.friends
-              .filter((f) => onlineUserIds.includes(f._id))
-              .map((f) => f._id)
-
-            dispatch(setOnlineUsers(onlineFriends))
-          }
-        })
+        socket.on("getUsers", findOnlineFriends)
       } else {
         logoutUser()
       }
+    }
+
+    return () => {
+      socket.off("getUsers", findOnlineFriends)
     }
   }, [user])
 

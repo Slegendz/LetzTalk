@@ -15,7 +15,7 @@ const newConversation = async (req, res) => {
     const savedConversation = await newConversation.save();
     res.status(200).json(savedConversation);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -30,7 +30,7 @@ const getConversation = async (req, res) => {
     });
     res.status(200).json(conversation);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -48,7 +48,7 @@ const getMembersConversation = async (req, res) => {
     console.log(conversation);
     res.status(200).json(conversation);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({ message: err.message });
   }
 };
 

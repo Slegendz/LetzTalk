@@ -19,7 +19,6 @@ var router = _express["default"].Router();
 
 router.get("/:id", _authMiddleware.verifyJWT, _userController.getUser);
 router.get("/:id/friends", _authMiddleware.verifyJWT, _userController.getUserFriends);
-router.patch("/updateUser/:id", _authMiddleware.verifyJWT, _userController.updateUser);
 /* Update the friend or remove them */
 
 router.patch("/:id/:friendId", _authMiddleware.verifyJWT, _userController.addRemoveFriends);

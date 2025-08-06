@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-const Schema = mongoose.Schema;
+const { Schema, model } = mongoose;
 
-// Message send
+// Messages send
 const messageSchema = new Schema({
     conversationId: { 
         type: String,
@@ -13,9 +13,10 @@ const messageSchema = new Schema({
     },
     text: {
         required: true,
-        type: String
+        type: String, 
+        trim: true,
     }
 }, { timestamps: true })
 
-const message = mongoose.model("Message", messageSchema);
-export default message;
+const Message = model("Message", messageSchema);
+export default Message;

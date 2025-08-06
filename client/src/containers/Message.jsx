@@ -1,27 +1,28 @@
 import UserImage from "../assets/Img/github.gif"
-import { formatDistanceToNowStrict } from "date-fns"
+import { format } from "date-fns"
 import React from "react"
 
-const Message = ({ own, message, currFriend, user, isBot = false }) =>  {
-  const lastOnlineTime = formatDistanceToNowStrict(message.createdAt).split(" ")
-  const timeStamp = lastOnlineTime[0] + lastOnlineTime[1][0]
+const Message = ({ own, message, currFriend, user, isBot = false, prevUser, setPrevUser }) =>  {
+  const timeStamp = format(new Date(message.createdAt), 'h:mm a');
+  if(own) setPrevUser(true)
 
   return (
     <div
-      className={`${own ? "justify-end" : "justify-start"} my-1 flex items-start gap-2 xs:my-2 xs:gap-4 xs:px-4 `}
+      className={`${own ? "justify-end" : "justify-start"} my-1 flex items-start gap-2 xs:gap-4 xs:px-4 `}
     >
       {!own && (
         <div className="h-[30px] w-[30px]">
           <img
             className="h-full w-full rounded-full object-cover object-center"
-            src = {isBot ? UserImage : `${import.meta.env.VITE_BASE_URL}/assets/${currFriend.picturePath}`}
+            src = {isBot ? UserImage : currFriend.picturePath}
+              // `${import.meta.env.VITE_BASE_URL}/assets/${currFriend.picturePath}`}
             alt="UserImage"
           />
         </div>
       )}
 
       <div
-        className={`${own ? "bg-cyan-400 bg-opacity-70" : "bg-rose-400 bg-opacity-70"} text-[15px] leading-6 xs:text-base px-2 py-2 flex  max-w-[220px] gap-2 rounded-lg xs:max-w-[70%] xs:gap-4 2xl:max-w-[800px] `}
+        className={`${own ? "bg-cyan-400 bg-opacity-90" : "bg-rose-400 bg-opacity-90"} text-[15px] leading-6 xs:text-base px-2 py-2 flex  max-w-[220px] gap-2 rounded-lg xs:max-w-[70%] xs:gap-4 2xl:max-w-[800px] `}
       >
         <p
           className={` wrapWord flex flex-1`}
@@ -29,7 +30,7 @@ const Message = ({ own, message, currFriend, user, isBot = false }) =>  {
           {message.text}
         </p>
         <p
-          className={`-mb-[5px] flex items-end justify-end text-[12px]`}
+          className={`-mb-[9px] flex items-end justify-end text-[10px]`}
         >
           {timeStamp}
         </p>
@@ -39,7 +40,8 @@ const Message = ({ own, message, currFriend, user, isBot = false }) =>  {
         <div className="h-[30px] w-[30px]">
           <img
             className="h-full w-full rounded-full object-cover object-center"
-            src={`${import.meta.env.VITE_BASE_URL}/assets/${user.picturePath}`}
+            // src={`${import.meta.env.VITE_BASE_URL}/assets/${user.picturePath}`}
+            src = {user.picturePath}
             alt="UserImage"
           />
         </div>

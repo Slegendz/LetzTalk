@@ -7,6 +7,7 @@ import useUserActiveStatus from "./hooks/useUserActiveStatus.js"
 import useWindowSize from "./hooks/useWindowSize.js"
 import LetzTalk from "./assets/LetzTalk.mp4"
 import AuthVerify from "./utils/AuthVerify.js"
+import Prefetch from "./containers/Prefetch.jsx"
 
 const ProfilePage = lazy(
   () => import("./containers/ProfilePage/ProfilePage.jsx")
@@ -53,7 +54,7 @@ function App() {
           <Routes>
             <Route path="/" element={<LoginPage />} />
 
-            {/* <Route element={<Prefetch />}> */}
+            <Route element={<Prefetch />}>
               <Route
                 path="/home"
                 element={
@@ -87,7 +88,7 @@ function App() {
                   )
                 }
               />
-            {/* </Route> */}
+            </Route>
             <Route path="*" element={<Missing />} />
           </Routes>
         </Suspense>

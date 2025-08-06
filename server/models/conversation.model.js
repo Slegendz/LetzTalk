@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const Schema = mongoose.Schema;
+const { Schema, model } = mongoose;
 
 const conversationSchema = new Schema({
     members: {
@@ -8,5 +8,5 @@ const conversationSchema = new Schema({
     }
 }, { timestamps: true })
 
-const Conversaton = mongoose.model("Conversation", conversationSchema);
+const Conversaton = model("Conversation", conversationSchema);
 export default Conversaton;

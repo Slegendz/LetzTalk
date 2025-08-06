@@ -3,27 +3,20 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setFriends } from "../../redux/authSlice"
 import React from "react"
+import fetchFriends from "../../utils/fetchFriends.js"
 
-const FriendListWidget = ({ userId }) => {
+const FriendListWidget = ({ userId, friends }) => {
   const dispatch = useDispatch()
   const token = useSelector((state) => state.token)
-  const user = useSelector((state) => state.user)
-  const friends = useSelector((state) => state.user.friends)
 
   useEffect(() => {
     const getFriends = async () => {
-      const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}/users/${userId}/friends`,
-        {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      const data = await response.json()
-      if (response.ok) {
+      const data = await fetchFriends({ userId, token })
+      if (data) {
         dispatch(setFriends(data))
       }
     }
+
     getFriends()
   }, [])
 

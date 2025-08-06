@@ -1,46 +1,60 @@
 import React, { useEffect, useRef, useState } from "react"
-import { useSelector, useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import Conversation from "./Conversation"
 import Sidebar from "../components/Sidebar"
 import { AiOutlineMessage } from "react-icons/ai"
 import { socket } from "../utils/SocketConn.js"
 import ChatTopbar from "./ChatTopbar.jsx"
 import { useAutosizeTextArea } from "../hooks/useAutosizeTextArea.js"
-import { setFriends } from "../redux/authSlice.jsx"
 import EmojiModal from "../components/EmojiModal.jsx"
 import Message from "./Message.jsx"
 import TypingMessage from "./TypingMessage.jsx"
 import { GoogleGenerativeAI } from "@google/generative-ai"
+import fetchFriends from "../utils/fetchFriends.js"
+import { setFriends } from "../redux/authSlice.jsx"
 
-export default function Messenger({ logoutUser, windowSize }) {
+const Messenger = ({ logoutUser, windowSize }) => {
   const [conversations, setConversations] = useState(null)
   const [currentChat, setCurrentChat] = useState(null)
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState("")
   const [arrivalMessage, setArrivalMessage] = useState(null)
-  const [currFriend, setCurrFriend] = useState([])
+  const [currFriend, setCurrFriend] = useState(null)
 
+  // User Typing Status
+  const [userTyping, setUserTyping] = useState(null)
   const [isTyping, setIsTyping] = useState(false)
 
-  const user = useSelector((state) => state.user)
-  const friends = useSelector((state) => state.user.friends)
-  const token = useSelector((state) => state.token)
-  const { _id, picturePath } = useSelector((state) => state.user)
-
+  // Bot Conversatoin Status
   const [botConversation, setBotConversation] = useState(false)
   const [botReply, setBotReply] = useState(false)
   const [botReplyMsg, setBotReplyMsg] = useState(false)
 
+  // States 
+  const user = useSelector((state) => state.user)
+  const mode = useSelector((state) => state.mode)
+  const token = useSelector((state) => state.token)
+  const { _id, picturePath, friends } = useSelector((state) => state.user)
+
   const scrollRef = useRef()
   const textAreaRef = useRef()
+
+  const dispatch = useDispatch();
 
   const genAI = new GoogleGenerativeAI(process.env.REACT_APP_LANGUAGE_MODEL_KEY)
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
 
   const botId = process.env.REACT_APP_BOT_ID
+  let activityTimer
 
   useAutosizeTextArea(textAreaRef.current, newMessage)
-  let activityTimer
+
+  const refreshHandler = async () => {
+    const data = await fetchFriends({ userId: _id, token })
+    if (data) {
+      dispatch(setFriends(data))
+    }
+  }
 
   useEffect(() => {
     socket.on("getMessage", (data) => {
@@ -51,14 +65,23 @@ export default function Messenger({ logoutUser, windowSize }) {
       })
     })
 
-    socket.on("userActivity", () => {
-      setIsTyping(true)
+    socket.on("userActivity", ({ senderId }) => {
+      if (!isTyping) setIsTyping(true)
+      if (!userTyping) setUserTyping(senderId)
 
       clearTimeout(activityTimer)
       activityTimer = setTimeout(() => {
         setIsTyping(false)
-      }, 2000)
+      }, 1500)
     })
+
+    socket.on("refresh", refreshHandler)
+
+    return () => {
+      socket.off("refresh", refreshHandler)
+      socket.off("getMessage")
+      socket.off("userActivity")
+    }
   }, [])
 
   useEffect(() => {
@@ -68,9 +91,9 @@ export default function Messenger({ logoutUser, windowSize }) {
       }
     }
 
-    if (newMessage.length > 0) {
+    if (newMessage.length > 0 && !botConversation) {
       const receiverId = currFriend?._id
-      socket.emit("activity", receiverId)
+      socket.emit("activity", { receiverId, senderId: user._id })
     } else {
       setIsTyping(false)
     }
@@ -188,27 +211,22 @@ export default function Messenger({ logoutUser, windowSize }) {
 
   const getFriendConversation = async (friend, isBot) => {
     try {
-      const response = isBot
-        ? await fetch(
-            `${process.env.REACT_APP_BASE_URL}/conversations/find/${user._id}/${botId}`,
-            {
-              method: "GET",
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          )
-        : await fetch(
-            `${process.env.REACT_APP_BASE_URL}/conversations/find/${user._id}/${friend._id}`,
-            {
-              method: "GET",
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          )
+      const friendId = isBot ? botId : friend._id
+
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/conversations/find/${user._id}/${friendId}`,
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
 
       const data = await response.json()
       setConversations(data)
 
       if (isBot) {
         setBotConversation(true)
+        setCurrFriend(null)
       } else {
         setCurrFriend(friend)
         setBotConversation(false)
@@ -250,11 +268,11 @@ export default function Messenger({ logoutUser, windowSize }) {
                 conversations={conversations}
                 setCurrentChat={setCurrentChat}
                 setMessages={setMessages}
-                isBot
+                isBot={true}
               />
             </div>
 
-            {friends?.length &&
+            {friends &&
               friends.map((friend, idx) => (
                 <div
                   key={idx}
@@ -280,7 +298,9 @@ export default function Messenger({ logoutUser, windowSize }) {
                 <ChatTopbar currFriend={currFriend} isBot={botConversation} />
               </div>
 
-              <div className="flex h-0 flex-grow flex-col overflow-auto p-2 xs:p-4">
+              <div
+                className={`flex h-0 flex-grow flex-col overflow-auto ${mode === "dark" ? "bg-chatBackDark" : "bg-chatBackLight"} bg-contain p-2 xs:p-4`}
+              >
                 {messages.map((m, idx) => (
                   <div key={idx} ref={scrollRef}>
                     <Message
@@ -293,7 +313,8 @@ export default function Messenger({ logoutUser, windowSize }) {
                   </div>
                 ))}
 
-                {(isTyping || botReplyMsg) && (
+                {((isTyping && userTyping === currFriend?._id) ||
+                  botReplyMsg) && (
                   <TypingMessage
                     isBot={botConversation}
                     message={{
@@ -305,7 +326,7 @@ export default function Messenger({ logoutUser, windowSize }) {
                 )}
               </div>
 
-              <div className="relative m-2 flex min-h-[50px] items-center gap-2 rounded-[25px] border border-r-2 border-gray-400 px-2 sm:m-4 sm:px-4">
+              <div className="relative flex min-h-[50px] items-center gap-2 border-t border-gray-500 border-opacity-40 px-2 py-2 sm:px-4 sm:py-3">
                 <EmojiModal
                   windowSize={windowSize}
                   newMessage={newMessage}
@@ -341,3 +362,5 @@ export default function Messenger({ logoutUser, windowSize }) {
     </div>
   )
 }
+
+export default Messenger

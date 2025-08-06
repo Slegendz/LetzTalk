@@ -1,37 +1,38 @@
 import mongoose from "mongoose";
-const Schema = mongoose.Schema;
+const { Schema, model } = mongoose;
 
-const userSchema = new Schema({
+const userSchema = new Schema(
+  {
     firstName: {
-        type: String,
-        required: true,
-        min: 2,
-        max: 50,
+      type: String,
+      required: true,
+      min: 2,
+      max: 50,
     },
     lastName: {
-        type: String,
-        required: true,
-        min: 2,
-        max: 50,
+      type: String,
+      required: true,
+      min: 2,
+      max: 50,
     },
     email: {
-        type: String,
-        required: true,
-        max: 50,
-        unique: true
+      type: String,
+      required: true,
+      max: 50,
+      unique: true,
     },
     password: {
-        type: String,
-        required: true,
-        min: 5,
+      type: String,
+      required: true,
+      min: 5,
     },
     picturePath: {
-        type: String,
-        default: "",
+      type: String,
+      default: "",
     },
     coverImagePath: {
-        type: String,
-        default: "",
+      type: String,
+      default: "",
     },
     friends: {
         type: Array,
@@ -47,18 +48,20 @@ const userSchema = new Schema({
     viewedProfile: Number,
     refreshToken: String,
     twitterUrl: {
-        type: String, 
-        default: "",
+      type: String,
+      default: "",
     },
     instagramUrl: {
-        type: String, 
-        default: "",
+      type: String,
+      default: "",
     },
     linkedinUrl: {
-        type: String, 
-        default: "",
+      type: String,
+      default: "",
     },
-}, { timestamps: true });
+  },
+  { timestamps: true }
+);
 
-const User = mongoose.model('User', userSchema);
+const User = model("User", userSchema);
 export default User;

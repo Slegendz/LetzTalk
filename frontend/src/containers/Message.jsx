@@ -8,7 +8,7 @@ const Message = ({ own, message, currFriend, user, isBot = false }) =>  {
 
   return (
     <div
-      className={`${own ? "justify-end" : "justify-start"} my-1 flex items-start gap-2 xs:my-2 xs:gap-4 xs:px-4 `}
+      className={`${own ? "justify-end" : "justify-start"} my-1 flex items-start gap-2 xs:gap-4 xs:px-4 `}
     >
       {!own && (
         <div className="h-[30px] w-[30px]">
@@ -22,7 +22,7 @@ const Message = ({ own, message, currFriend, user, isBot = false }) =>  {
       )}
 
       <div
-        className={`${own ? "bg-cyan-400 bg-opacity-70" : "bg-rose-400 bg-opacity-70"} text-[15px] leading-6 xs:text-base px-2 py-2 flex  max-w-[220px] gap-2 rounded-lg xs:max-w-[70%] xs:gap-4 2xl:max-w-[800px] `}
+        className={`${own ? "bg-cyan-400 bg-opacity-90" : "bg-rose-400 bg-opacity-90"} text-[15px] leading-6 xs:text-base px-2 py-2 flex  max-w-[220px] gap-2 rounded-lg xs:max-w-[70%] xs:gap-4 2xl:max-w-[800px] `}
       >
         <p
           className={` wrapWord flex flex-1`}
@@ -30,7 +30,7 @@ const Message = ({ own, message, currFriend, user, isBot = false }) =>  {
           {message.text}
         </p>
         <p
-          className={`-mb-[5px] flex items-end justify-end text-[12px]`}
+          className={`-mb-[9px] flex items-end justify-end text-[10px]`}
         >
           {timeStamp}
         </p>

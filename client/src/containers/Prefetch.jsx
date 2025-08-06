@@ -7,15 +7,13 @@ const Prefetch = () => {
   const dispatch = useDispatch()
   const token = useSelector((state) => state.token)
   const posts = useSelector((state) => state.posts)
+  const homePage = useSelector((state) => state.homePage)
 
-  const limitValue = 5
-  
-  const [homePage, setHomePage] = useState(1)
   const [loading, setLoading] = useState(true)
   const [hasMore, setHasMore] = useState(true)
 
   useEffect(() => {
-    const url = `${process.env.REACT_APP_BASE_URL}/posts?page=${homePage}`
+    const url = `${import.meta.env.VITE_BASE_URL}/posts?page=${homePage}`
 
     const fetchPosts = async (url) => {
       setLoading(true)
@@ -24,19 +22,19 @@ const Prefetch = () => {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         })
+
         if (!response.ok) {
           throw new Error("Failed to fetch posts")
         }
 
         const data = await response.json()
-        const len = data.length;
-        
+
         if (homePage === 1) {
           dispatch(setPosts({ posts: data }))
         } else {
-          dispatch(setPosts({ posts: [...posts, ...data]}))
+          dispatch(setPosts({ posts: [...posts, ...data] }))
         }
-        setHasMore(len > 0 && len%limitValue === 0);
+        setHasMore(data.length > 0)
       } catch (error) {
         console.error("Error fetching posts:", error)
       } finally {
@@ -55,7 +53,7 @@ const Prefetch = () => {
         window.innerHeight + document.documentElement.scrollTop >=
           document.documentElement.scrollHeight - 20
       ) {
-        setHomePage(homePage+1);
+        dispatch(setHomePage())
       }
     }
 

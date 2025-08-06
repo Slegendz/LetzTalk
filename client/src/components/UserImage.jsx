@@ -1,16 +1,17 @@
 import React from "react"
+import { LazyLoadImage } from "react-lazy-load-image-component"
+import "react-lazy-load-image-component/src/effects/blur.css"
 
-const UserImage = ({ image }) => {
+const UserImage = ({ image, width, height }) => {
   return (
-    <div
-      className="h-[50px] w-[50px]"
-    >
-      <img
-        className="h-full w-full rounded-full object-cover object-center"
-        alt="user"
-        src={`${import.meta.env.VITE_BASE_URL}/assets/${image}`}
-      />
-    </div>
+    <LazyLoadImage
+      width={width}
+      height={height}
+      className={`rounded-full w-[${width}px] h-[${height}px] object-cover object-center`}
+      alt="user"
+      // src={`${import.meta.env.VITE_BASE_URL}/assets/${image}`}
+      src={image}
+    />
   )
 }
 
