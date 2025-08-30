@@ -18,6 +18,7 @@ const ProfilePage = ({ logoutUser }) => {
   const [blurEffect, setBlurEffect] = useState(false)
 
   const { userId } = useParams()
+  const friends = useSelector((state) => state.user.friends)
   const token = useSelector((state) => state.token)
 
   const updateUser = async (formData) => {
@@ -125,7 +126,7 @@ const ProfilePage = ({ logoutUser }) => {
         <div className="-mt-[16%] block min-h-screen max-w-[1024px] bg-gray-300 bg-opacity-10 px-4 py-8 sm:px-[4%] lg:flex lg:justify-center lg:gap-2">
           <div className="w-full lg:w-[40%]">
             <UserWidget userId={userId} picturePath={user.picturePath} />
-            <FriendListWidget userId={userId} />
+            <FriendListWidget userId={userId} friends = {friends} />
           </div>
           <div className="mt-6 w-full lg:m-0 lg:w-[60%]">
             {loggedInUser._id === user._id && (

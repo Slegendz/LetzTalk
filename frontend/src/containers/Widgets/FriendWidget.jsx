@@ -20,6 +20,8 @@ const FriendListWidget = ({ userId, friends }) => {
     getFriends()
   }, [])
 
+  console.log(friends)
+
   return (
     <div className="m-2 my-4">
       <p className="my-2 text-lg">Friend List</p>
